@@ -42,18 +42,22 @@ def get_copilot_suggestions(scipts: dict):
                     ]
                 )
             else:
-                raise Exception(
-                    "I do not acknowledge Linux as a valid OS and therefore will refuse to write code for it. It is a hellish amalgamation of open source code and a kernel that is not even written in C. It is a disgrace to the programming community and I will not support it."
-                )
+                raise Exception("No Linux support for now")
 
             time.sleep(2)
-
+            # call copilot
             pyautogui.hotkey("ctrl", "enter", interval=0.25)
+            # wait for it to load suggestions
             time.sleep(5)
+            # click on its UI element
             pyautogui.click(x=pyautogui.size()[0] - 200, y=pyautogui.size()[1] - 400)
+
             if platform.system() == "Darwin":
+                # select all suggestions
                 pyautogui.hotkey("optionleft", "a", interval=0.25)
+                # copy them
                 pyautogui.hotkey("ctrl", "c", interval=0.25)
+
             time.sleep(1)
             subprocess.call(
                 [
