@@ -17,11 +17,12 @@ def get_script_contents(path: str):
 
 
 def get_copilot_suggestions(scipts: dict):
-    if not os.path.exists(os.path.join(os.getcwd(), "results")):
-        os.mkdir(os.path.join(os.getcwd(), "results"))
+    if not os.path.exists(os.path.join(os.getcwd(), "copilot_raw")):
+        os.mkdir(os.path.join(os.getcwd(), "copilot_raw"))
+
     for script_name, script in scipts.items():
         # create a new file and write the script to it
-        with open(os.path.join(os.getcwd(), "results", "r_" + script_name), "w") as f:
+        with open(os.path.join(os.getcwd(), "copilot_raw", "r_" + script_name), "w") as f:
             f.write(script)
             f.close()
 
@@ -31,14 +32,14 @@ def get_copilot_suggestions(scipts: dict):
                         "open",
                         "-a",
                         "Visual Studio Code",
-                        os.path.join(os.getcwd(), "results", "r_" + script_name),
+                        os.path.join(os.getcwd(), "copilot_raw", "r_" + script_name),
                     ]
                 )
             elif platform.system() == "Windows":
                 subprocess.call(
                     [
                         "code",
-                        os.path.join(os.getcwd(), "results", "r_" + script_name),
+                        os.path.join(os.getcwd(), "copilot_raw", "r_" + script_name),
                     ]
                 )
             else:
@@ -46,17 +47,67 @@ def get_copilot_suggestions(scipts: dict):
 
             time.sleep(2)
             # call copilot
+
+            print(
+                "\033[92m"
+                + f"{script_name}: "
+                + "\033[0m"
+                + "\033[94m"
+                + " Calling copilot..."
+                + "\033[0m"
+            )
             pyautogui.hotkey("ctrl", "enter", interval=0.25)
             # wait for it to load suggestions
-            time.sleep(5)
+            time.sleep(7)
             # click on its UI element
             pyautogui.click(x=pyautogui.size()[0] - 200, y=pyautogui.size()[1] - 400)
 
-            if platform.system() == "Darwin":
-                # select all suggestions
-                pyautogui.hotkey("optionleft", "a", interval=0.25)
-                # copy them
-                pyautogui.hotkey("ctrl", "c", interval=0.25)
+            # select all suggestions
+            pyautogui.click(x=pyautogui.size()[0] - 200, y=pyautogui.size()[1] - 400)
+
+            print(
+                "\033[92m"
+                + f"{script_name}: "
+                + "\033[0m"
+                + "\033[94m"
+                + " Selecting all suggestions..."
+                + "\033[0m"
+            )
+
+            pyautogui.hotkey(
+                "command", "a", interval=1.0
+            ) if platform.system() == "Darwin" else pyautogui.hotkey(
+                "ctrl", "a", interval=1.0
+            )
+            # copy them
+            print(
+                "\033[92m"
+                + f"{script_name}: "
+                + "\033[0m"
+                + "\033[94m"
+                + " Copying suggestions..."
+                + "\033[0m"
+            )
+            pyautogui.hotkey(
+                "command", "c", interval=0.25
+            ) if platform.system() == "Darwin" else pyautogui.hotkey(
+                "ctrl", "c", interval=0.25
+            )
+            # close the suggestion window
+            pyautogui.click(x=pyautogui.size()[0] - 200, y=pyautogui.size()[1] - 400)
+            print(
+                "\033[92m"
+                + f"{script_name}: "
+                + "\033[0m"
+                + "\033[94m"
+                + " Closing susggestion box..."
+                + "\033[0m"
+            )
+            pyautogui.hotkey(
+                "command", "w", interval=0.25
+            ) if platform.system() == "Darwin" else pyautogui.hotkey(
+                "ctrl", "w", interval=0.25
+            )
 
             time.sleep(1)
             subprocess.call(
@@ -64,13 +115,43 @@ def get_copilot_suggestions(scipts: dict):
                     "open",
                     "-a",
                     "Visual Studio Code",
-                    os.path.join(os.getcwd(), "results", "r_" + script_name),
+                    os.path.join(os.getcwd(), "copilot_raw", "r_" + script_name),
+                ]
+            ) if platform.system() == "Darwin" else subprocess.call(
+                [
+                    "code",
+                    os.path.join(os.getcwd(), "copilot_raw", "r_" + script_name),
                 ]
             )
-            pyautogui.hotkey("ctrl", "v", interval=0.25)
+
+            print(
+                "\033[92m"
+                + f"{script_name}: "
+                + "\033[0m"
+                + "\033[94m"
+                + " Pasting suggestions..."
+                + "\033[0m"
+            )
+            pyautogui.press("end", interval=0.25)
+            pyautogui.hotkey(
+                "command", "v", interval=0.25
+            ) if platform.system() == "Darwin" else pyautogui.hotkey(
+                "ctrl", "v", interval=0.25
+            )
+            print(
+                "\033[92m"
+                + f"{script_name}: "
+                + "\033[0m"
+                + "\033[94m"
+                + " Saving suggestions..."
+                + "\033[0m"
+            )
+
+            pyautogui.hotkey(
+                "command", "s"
+            ) if platform.system() == "Darwin" else pyautogui.hotkey("ctrl", "s")
 
 
 path = os.path.join(os.getcwd(), "scripts")
 list_of_files = get_script_contents(path)
-# print(list_of_files)
 get_copilot_suggestions(list_of_files)
