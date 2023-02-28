@@ -26,6 +26,16 @@ def get_script_contents(directory: str):
 
 
 def get_copilot_suggestions(scipts: dict, number_of_copilot_calls: int = 5):
+    """
+    Simulates a user calling copilot on a script, copying the suggestions, and pasting them into the script
+
+    Args:
+        scipts (dict): a dictionary of {scriot_name: script_contents} format
+        number_of_copilot_calls (int, optional): number of times to invoke copilot. Defaults to 5.
+
+    Raises:
+        Exception: LINUX IS A CANCER AND I HATE IT
+    """
     if not os.path.exists(os.path.join(os.getcwd(), "copilot_raw")):
         os.mkdir(os.path.join(os.getcwd(), "copilot_raw"))
 
