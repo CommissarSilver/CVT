@@ -1,1 +1,0 @@
-# implement a function for finding the maximum and minimum value in a BST
