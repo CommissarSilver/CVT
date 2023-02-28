@@ -13,7 +13,7 @@ def get_immediate_subdirectories(a_dir):
     return [name for name in os.listdir(a_dir)
             if os.path.isdir(os.path.join(a_dir, name))]
 
-CWE_list= ['cwe-20']
+CWE_list= ['cwe-22']
 for cwe in CWE_list:
     code_path = os.path.join(
         os.getcwd(),
