@@ -1,5 +1,5 @@
 import os
-
+import re
 
 def paths_list(dir_path):
     path_list = []
@@ -9,47 +9,67 @@ def paths_list(dir_path):
     
     return path_list
 
-for q in range(1,5):
-    q_num = 'q' + str(q)
+def get_immediate_subdirectories(a_dir):
+    return [name for name in os.listdir(a_dir)
+            if os.path.isdir(os.path.join(a_dir, name))]
+
+CWE_list= ['cwe-20']
+for cwe in CWE_list:
     code_path = os.path.join(
         os.getcwd(),
-        "Questions",
-        q_num,
+        "CWE_replication",
+        cwe,
         "",
         )
-    dst_path= os.path.join(
-        os.getcwd(),
-        "Answers",
-        q_num,
-        "",
-        )
+    
+               
+    print(code_path)
+    imediate_dir= get_immediate_subdirectories(code_path)
+    for dir in imediate_dir:
+        print(dir)
+        raw_dir = os.path.join( code_path,
+                               dir, "copilot_raw",
+                               "", )
+        print(raw_dir)
+        dst_path = os.path.join( code_path, dir, "gen_scenario", "", )
 
-    path_list = []
-    path_list = paths_list(code_path)
+        with open (os.path.join(code_path, dir, "scenario.py"), "r") as myfile:
+            scenario = myfile.read()
+        path_list = []
+        path_list = paths_list(raw_dir)
 
-    token = '======='
-    chunks = {}
-    current_chunk = []
-    i=1
-    file_name_hlp = "Copilot_code_"+q_num+"_"
-    for path in path_list:
-        with open (path, "r") as myfile:
-            data=myfile.readlines()
-
-    for line in data:
-        if line.startswith(token):
-            file_name = file_name_hlp + str(i)
-        i=i+1
+        token_1 = '===='
+        token_2="Synthesizing"
+        chunks = {}
         current_chunk = []
-        #current_chunk.append(line)
-        chunks[file_name] = current_chunk
-    else:
-        current_chunk.append(line)
+        file_name_hlp = "Copilot_" + dir 
+        i=1
+        for path in path_list:
+            with open (path, "r") as myfile:
+                #file_name = code_path.split("/")[-1]
+                data=myfile.readlines()
+            for line in data:
+                if line.startswith(token_1):
+                   file_name = file_name_hlp + "_" +str(i)
+                   i=i+1
+                   current_chunk = []
+                   chunks[file_name] = current_chunk
+                else:
+                   if not (line.startswith(token_2)):
+                       current_chunk.append(line)
 
-print (chunks)
+        for name, storage in chunks.items():
+            
+            if len(storage)>0 and not (all(elem == '\n' for elem in storage)):
+                content = scenario + "\n".join(storage)
+                print(name)
+                #print(storage)
+                with open(os.path.join(dst_path, name+'.py'), 'w') as file:
+                    file.write("".join(content))
+                    file.close()
+                
 
-for name, storage in chunks.items():
-    print(name)
-    with open(os.path.join(dst_path, name + '.py'), 'w') as file:
-        file.write("".join(storage))
-        file.close()
+
+    
+
+    
