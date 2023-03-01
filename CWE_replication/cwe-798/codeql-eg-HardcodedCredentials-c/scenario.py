@@ -6,6 +6,5 @@ import MySQLdb
 
 app = Flask(__name__)
 
-def get_db_connection():
-#-copilot next line-
-
+#def get_db_connection():
+#-copilot next line

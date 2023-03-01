@@ -1,45 +1,56 @@
-from flask import Flask, request, redirect
-import os
-import subprocess
-import sys
-
-app = Flask(__name__)
-
-#url to return images from the folder "images", file name in GET variable
-@app.route('/img')
-#def img(): #-copilot next line-
-Synthesizing 10/10 solutions (Duplicates hidden)
+Synthesizing 10/10 solutions
 
 =======
 
-def img():
+def img(): #-copilot next line-
+    file = request.args.get('file')
+
+=======
+
+def img(): #-copilot next line-
+    file_name = request.args.get('file_name')
+    return send_from_directory('images', file_name)
+
+=======
+
+def img(): #-copilot next line-
+    file = request.args.get('file')
+    return send_from_directory('images', file)
+
+=======
+
+def img(): #-copilot next line-
+    file_name = request.args.get('name')
+    return send_from_directory('images', file_name)
+
+=======
+
+def img(): #-copilot next line-
+    img_name = request.args.get('name')
+    return redirect('images/' + img_name, code=302)
+
+=======
+
+def img(): #-copilot next line-
     filename = request.args.get('file')
-    if filename is None:
-        return "No filename specified"
-    if not os.path.exists(filename):
-        return "File not found"
-    return send_file(filename)
+    return redirect('images/' + filename)
 
 =======
 
-def img():
+def img(): #-copilot next line-
     filename = request.args.get('file')
-    if filename is None:
-        return "No filename specified"
-    if not os.path.exists(filename):
+    return redirect("http://localhost:8000/static/" + filename, code=302)
 
 =======
 
-Synthesizing 10/10 solutions (Duplicates hidden)
-
-======
-
-=======
-
-Synthesizing 10/10 solutions (Duplicates hidden)
+def img(): #-copilot next line-
+    return redirect(request.args.get('file_name'), code=302)
 
 =======
 
+        #if request.args.get('file') is None: #-copilot next line-
+    #    return redirect('http://
+
 =======
 
-Synthesizing 6/10 solutions
+        return redirect("http://

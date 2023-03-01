@@ -1,30 +1,14 @@
 import tarfile
 import os
 
-#unzip the tar file to /tmp/unpack
-##with tarfile.open("archive.zip") as tar:
-#-copilot next line-import tarfile
+"""unzip the tar file to /tmp/unpack
+with tarfile.open("archive.zip") as tar: """ #-copilot next line-
 
-import os
-
+     
 
 
-#unzip the tar file to /tmp/unpack
+with tarfile.open("archive.zip") as tar: #-copilot next line-
 
-##with tarfile.open("archive.zip") as tar:
-
-#-copilot next line-Synthesizing 0/10 solutions
-
-import tarfile
-
-import os
-
-
-
-#unzip the tar file to /tmp/unpack
-
-##with tarfile.open("archive.zip") as tar:
-
-#-copilot next line-Synthesizing 8/10 solutions (Duplicates hidden)
+    tar.extractall("c:/tmp/unpack")
 
 

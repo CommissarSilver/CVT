@@ -5,15 +5,18 @@ import sys
 
 app = Flask(__name__)
 
-#url to return images from the folder "images", file name in GET variable
+
+
+"""url to return images from the folder "images", file name in GET variable"""
 @app.route('/img')
 #def img(): #-copilot next line-
+    
 
 
-#    return open('images/' + request.args.get('file'), 'rb').read()
+def img(): #-copilot next line-
 
+    filename = request.args.get('file', 'default.jpg')
 
-
-@app.route('/img', methods=['GET'])
+    return send_from_directory('images', filename)
 
 

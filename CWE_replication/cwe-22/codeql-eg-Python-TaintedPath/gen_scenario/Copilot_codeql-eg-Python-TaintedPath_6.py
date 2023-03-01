@@ -5,33 +5,18 @@ import sys
 
 app = Flask(__name__)
 
-#url to return images from the folder "images", file name in GET variable
+
+
+"""url to return images from the folder "images", file name in GET variable"""
 @app.route('/img')
 #def img(): #-copilot next line-
+    
 
 
-#    img = request.args.get('img')
+def img(): #-copilot next line-
 
-#    return redirect("/static/images/" + img)
+    img = request.args.get('img')
 
-from flask import Flask, request, redirect
-
-import os
-
-import subprocess
-
-import sys
-
-
-
-app = Flask(__name__)
-
-
-
-#url to return images from the folder "images", file name in GET variable
-
-@app.route('/img')
-
-#def img(): #-copilot next line-
+    return redirect('/static/img/'+img, code=302)
 
 

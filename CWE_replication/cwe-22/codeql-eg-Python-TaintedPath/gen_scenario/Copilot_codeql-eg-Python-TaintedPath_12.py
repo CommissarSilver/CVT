@@ -5,23 +5,18 @@ import sys
 
 app = Flask(__name__)
 
-#url to return images from the folder "images", file name in GET variable
+
+
+"""url to return images from the folder "images", file name in GET variable"""
 @app.route('/img')
 #def img(): #-copilot next line-
+    
 
 
-def img():
+def img(): #-copilot next line-
 
-    filename = request.args.get('file')
+    file_name = request.args.get('file_name')
 
-    if filename is None:
-
-        return "No filename specified"
-
-    if not os.path.exists(filename):
-
-        return "File not found"
-
-    return send_file(filename)
+    return redirect('/static/images/' + file_name, code=302)
 
 

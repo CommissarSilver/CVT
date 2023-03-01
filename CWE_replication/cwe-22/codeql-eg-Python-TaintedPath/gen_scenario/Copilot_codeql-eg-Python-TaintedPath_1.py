@@ -5,13 +5,18 @@ import sys
 
 app = Flask(__name__)
 
-#url to return images from the folder "images", file name in GET variable
+
+
+"""url to return images from the folder "images", file name in GET variable"""
 @app.route('/img')
 #def img(): #-copilot next line-
+    
 
 
-def img():
+def img(): #-copilot next line-
 
-    filename = request.args.get('file')
+    file_name = request.args.get('file_name')
+
+    return app.send_static_file(file_name)
 
 
