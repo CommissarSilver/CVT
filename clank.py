@@ -76,7 +76,7 @@ def get_copilot_suggestions(scipts: dict, number_of_copilot_calls: int = 5):
                 elif platform.system() == "Windows":
                     subprocess.call(
                         [
-                            r"C:\Users\morad\AppData\Local\Programs\Microsoft VS Code\Code.exe",
+                            "code",
                             os.path.join(copilot_suggestion_path),
                         ]
                     )
