@@ -42,31 +42,22 @@ def get_copilot_suggestions(
     Raises:
         Exception: LINUX IS A CANCER AND I HATE IT
     """
+    # iterate over the each script path in scripts keys and create the subdirectory copilot_raw for each of them if it doesn't exits
+    # for script_name in scipts.keys():
+    for script_path in scipts.keys():
+        if not os.path.exists(os.path.join(script_path, "copilot_raw")):
+            os.makedirs(os.path.join(script_path, "copilot_raw"))
 
-    if not os.path.exists(os.path.join(os.getcwd(), "copilot_raw")):
-        os.mkdir(os.path.join(os.getcwd(), "copilot_raw"))
-
-    for script_name, script in scipts.items():
+    for script_path, script in scipts.items():
         for copilot_call_attempt in range(number_of_copilot_calls):
             # create a new file and write the script to it
-            if not os.path.exists(
-                os.path.join(
-                    os.getcwd(), "copilot_raw", script_name, str(copilot_call_attempt)
-                )
-            ):
-                os.makedirs(
-                    os.path.join(
-                        os.getcwd(), "copilot_raw", script_name, str(copilot_call_attempt)
-                    )
-                )
-
             copilot_suggestion_path = os.path.join(
                 os.getcwd(),
+                script_path,
                 "copilot_raw",
-                script_name,
-                str(copilot_call_attempt),
-                "suggestions.py",
+                f"suggestions_{str(copilot_call_attempt)}.py",
             )
+            
             with open(copilot_suggestion_path, "w") as f:
                 f.write(script)
                 f.close()
@@ -95,7 +86,7 @@ def get_copilot_suggestions(
 
                 print(
                     "\033[92m"
-                    + f"{script_name}: "
+                    + f"{script_path}: "
                     + "\033[0m"
                     + "\033[94m"
                     + " Calling copilot..."
@@ -114,7 +105,7 @@ def get_copilot_suggestions(
 
                 print(
                     "\033[92m"
-                    + f"{script_name}: "
+                    + f"{script_path}: "
                     + "\033[0m"
                     + "\033[94m"
                     + " Selecting all suggestions..."
@@ -129,7 +120,7 @@ def get_copilot_suggestions(
                 # copy them
                 print(
                     "\033[92m"
-                    + f"{script_name}: "
+                    + f"{script_path}: "
                     + "\033[0m"
                     + "\033[94m"
                     + " Copying suggestions..."
@@ -145,7 +136,7 @@ def get_copilot_suggestions(
                 pyautogui.click(x=pyautogui.size()[0] - 200, y=pyautogui.size()[1] - 400)
                 print(
                     "\033[92m"
-                    + f"{script_name}: "
+                    + f"{script_path}: "
                     + "\033[0m"
                     + "\033[94m"
                     + " Closing susggestion box..."
@@ -162,7 +153,7 @@ def get_copilot_suggestions(
 
                 print(
                     "\033[92m"
-                    + f"{script_name}: "
+                    + f"{script_path}: "
                     + "\033[0m"
                     + "\033[94m"
                     + " Pasting suggestions..."
@@ -177,7 +168,7 @@ def get_copilot_suggestions(
                 )
                 print(
                     "\033[92m"
-                    + f"{script_name}: "
+                    + f"{script_path}: "
                     + "\033[0m"
                     + "\033[94m"
                     + " Saving suggestions..."
