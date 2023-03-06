@@ -23,7 +23,7 @@ def get_script_contents(directory: str):
         for file in files:
             if file.endswith(".py"):
                 file_path = os.path.join(root, file)
-                scripts_to_call_copilot_on[root.split("/")[-1]] = open(file_path).read()
+                scripts_to_call_copilot_on[root] = open(file_path).read()
 
     return scripts_to_call_copilot_on
 
@@ -42,6 +42,7 @@ def get_copilot_suggestions(
     Raises:
         Exception: LINUX IS A CANCER AND I HATE IT
     """
+
     if not os.path.exists(os.path.join(os.getcwd(), "copilot_raw")):
         os.mkdir(os.path.join(os.getcwd(), "copilot_raw"))
 
