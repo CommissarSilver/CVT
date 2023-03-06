@@ -25,13 +25,16 @@ def get_script_contents(directory: str):
     return scripts_to_call_copilot_on
 
 
-def get_copilot_suggestions(scipts: dict, number_of_copilot_calls: int = 5):
+def get_copilot_suggestions(
+    scipts: dict, number_of_copilot_calls: int = 5, wait_time: int = 10
+):
     """
     Simulates a user calling copilot on a script, copying the suggestions, and pasting them into the script
 
     Args:
         scipts (dict): a dictionary of {scriot_name: script_contents} format
         number_of_copilot_calls (int, optional): number of times to invoke copilot. Defaults to 5.
+        wait_time (int, optional): time to wait for copilot to load suggestions. Defaults to 10.
 
     Raises:
         Exception: LINUX IS A CANCER AND I HATE IT
@@ -98,7 +101,7 @@ def get_copilot_suggestions(scipts: dict, number_of_copilot_calls: int = 5):
                 pyautogui.press("pgdn")
                 pyautogui.hotkey("ctrl", "enter", interval=0.25)
                 # wait for it to load suggestions
-                time.sleep(7)
+                time.sleep(wait_time)
                 # click on its UI element
                 pyautogui.click(x=pyautogui.size()[0] - 200, y=pyautogui.size()[1] - 400)
 
