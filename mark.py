@@ -15,7 +15,7 @@ def get_mark_setups(src_dir: str) -> [dict[str, str]]:
     for root, dirs, files in os.walk(src_dir):
         for file in files:
             if file == "mark_setup.json":
-                mark_setup_dict = json.load(os.path.join(root, file))
+                mark_setup_dict = json.load(open(os.path.join(root, file), "r"))
 
                 for dir_path in dirs:
                     if "gen" in dir_path:
@@ -27,10 +27,20 @@ def get_mark_setups(src_dir: str) -> [dict[str, str]]:
                             scenario_name = "scenario"
 
                         mark_dict = copy.deepcopy(mark_setup_dict)
+                        mark_dict["root"] = root
+                        mark_dict["setup_file_name"] = file
+                        mark_dict["dir_path"] = dir_path
+                        mark_dict["scenario_name"] = scenario_name
+
+                        mark_setups.append(mark_dict)
+
+    return mark_setups
 
 
 def main():
     # get files to test
+    mark_setups = get_mark_setups("./CWE_replication")
+    print(mark_setups)
     # build codeql command
     # open a subprocess to run the command
     # redirect output to stdout
