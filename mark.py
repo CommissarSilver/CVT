@@ -41,6 +41,22 @@ def main():
     # get files to test
     mark_setups = get_mark_setups("./CWE_replication")
     print(mark_setups)
+
+    for mark_setup in mark_setups:
+        if "query" not in mark_setup:
+            continue
+
+        db_name = "codeql_db"
+        results_csv_name = "codeql_results"
+        if mark_setup.get("scenario_name", "") != "":
+            db_name = mark_setup.get("scenario_name") + f"_{db_name}"
+            results_csv_name = mark_setup.get("scenario_name") + f"_{results_csv_name}"
+
+        if os.path.isfile(
+            os.path.join(mark_setup["setup_file_name"], results_csv_name)
+        ):
+            print(f"Results file exists, skipping: {}")
+            continue
     # build codeql command
     # open a subprocess to run the command
     # redirect output to stdout
