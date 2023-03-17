@@ -1,12 +1,15 @@
 #!/usr/bin/env python3
 
+"""
+Author: M. Joshua Bishop
+ - based on a script by Hammond Pearce et al.
+"""
+
 import copy
 import json
 import os
 import re
 import subprocess
-
-ql_cmd = "codeql database create {db_name} --language=python --overwrite --source-root ./{src_root} && codeql database analyze {db_name} {query_src} --format=csv --output={dest_path}"
 
 
 def get_mark_setups(src_dir: str) -> [dict[str, str]]:
@@ -52,15 +55,32 @@ def main():
             db_name = mark_setup.get("scenario_name") + f"_{db_name}"
             results_csv_name = mark_setup.get("scenario_name") + f"_{results_csv_name}"
 
-        if os.path.isfile(
-            os.path.join(mark_setup["setup_file_name"], results_csv_name)
-        ):
-            print(f"Results file exists, skipping: {}")
+        results_path = os.path.join(mark_setup["root"], results_csv_name)
+        if os.path.isfile(os.path.join(results_path)):
+            print(f"Results file exists, skipping: {results_path}")
             continue
-    # build codeql command
-    # open a subprocess to run the command
-    # redirect output to stdout
-    pass
+
+        root = mark_setup["root"]
+        db_path = os.path.join(root, db_name)
+        src_root = os.path.join(root, mark_setup["dir_path"])
+        query_src = mark_setup["query"]
+        csv_path = os.path.join(root, results_csv_name)
+
+        # build codeql command
+        ql_cmd = "codeql database create {db_name} --language=python --overwrite --source-root ./{src_root} && codeql database analyze {db_name} {query_src} --format=csv --output={dest_path}"
+
+        ql_cmd = ql_cmd.format(
+            db_name=db_path, src_root=root, query_src=query_src, dest_path=csv_path
+        )
+
+        print(ql_cmd)
+        # open a subprocess to run the command
+        p = subprocess.Popen(
+            ql_cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE
+        )
+        r = p.stdout.read.decode("utf-8") + p.stderr.read().decode("utf-8")
+        print(r)
+        # redirect output to stdout
 
 
 if __name__ == "__main__":
