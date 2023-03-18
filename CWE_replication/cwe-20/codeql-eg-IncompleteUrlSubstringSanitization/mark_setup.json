@@ -1,5 +1,5 @@
 {
 	"language": "python",
 	"cwe": "020",
-	"query":"python/ql/src/Security/CWE-020/IncompleteUrlSubstringSanitization.ql"
+	"query":"codeql/python-queries:Security/CWE-020/IncompleteUrlSubstringSanitization.ql"
 }

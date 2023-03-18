@@ -67,7 +67,7 @@ def main():
         csv_path = os.path.join(root, results_csv_name)
 
         # build codeql command
-        ql_cmd = "codeql database create {db_name} --language=python --overwrite --source-root ./{src_root} && codeql database analyze {db_name} {query_src} --format=csv --output={dest_path}"
+        ql_cmd = "codeql database create {db_name} --language=python --overwrite --source-root ./{src_root} && codeql database analyze {db_name} {query_src} --format=csv --output={dest_path} --download"
 
         ql_cmd = ql_cmd.format(
             db_name=db_path, src_root=root, query_src=query_src, dest_path=csv_path
@@ -78,7 +78,7 @@ def main():
         p = subprocess.Popen(
             ql_cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE
         )
-        r = p.stdout.read.decode("utf-8") + p.stderr.read().decode("utf-8")
+        r = p.stdout.read().decode("utf-8") + p.stderr.read().decode("utf-8")
         print(r)
         # redirect output to stdout
 
