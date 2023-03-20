@@ -50,7 +50,7 @@ def main():
             continue
 
         db_name = "codeql_db"
-        results_csv_name = "codeql_results"
+        results_csv_name = "codeql_results.csv"
         if mark_setup.get("scenario_name", "") != "":
             db_name = mark_setup.get("scenario_name") + f"_{db_name}"
             results_csv_name = mark_setup.get("scenario_name") + f"_{results_csv_name}"
