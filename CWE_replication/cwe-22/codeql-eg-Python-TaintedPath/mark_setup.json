@@ -1,0 +1,4 @@
+{
+	"cwe": "022",
+	"query": "codeql/python-queries:Security-022/PathInjection.ql"
+}

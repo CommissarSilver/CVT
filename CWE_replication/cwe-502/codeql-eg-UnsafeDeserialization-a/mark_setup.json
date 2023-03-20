@@ -1,0 +1,4 @@
+{
+	"cwe": "502",
+	"query": "codeql/python-queries:Security/CWE-502/UnsafeDeserialization.ql"
+}

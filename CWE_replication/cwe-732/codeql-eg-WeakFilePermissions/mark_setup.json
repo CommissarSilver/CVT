@@ -1,0 +1,4 @@
+{
+	"cwe": "732",
+	"query": "codeql/python-queries:Security/CWE-732/WeakFilePermissions.ql"
+}

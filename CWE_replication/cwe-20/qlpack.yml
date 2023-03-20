@@ -1,4 +1,0 @@
-name: cwe20
-version: 0.0.0
-extractor: python
-libraryPathDependencies: codeql-python

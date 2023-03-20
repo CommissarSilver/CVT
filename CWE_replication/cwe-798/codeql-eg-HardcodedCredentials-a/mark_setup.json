@@ -1,0 +1,4 @@
+{
+	"cwe": "798",
+	"query": "codeql/python-queries:Security/CWE-798/HardcodedCredentials.ql"
+}
