@@ -1,0 +1,31 @@
+[2023-03-21 15:08:33] This is codeql database analyze ./CWE_replication/cwe-22/codeql-eg-Python-TaintedPath/scenario_codeql_db codeql/python-queries:Security-022/PathInjection.ql --format=csv --output=./CWE_replication/cwe-22/codeql-eg-Python-TaintedPath/scenario_codeql_results.csv --download
+[2023-03-21 15:08:33] Log file was started late.
+[2023-03-21 15:08:33] [DETAILS] database analyze> Downloading queries...
+[2023-03-21 15:08:33] Running plumbing command: codeql pack download --format json --qlconfig-file=/home/86/20010986/CVT/qlconfig.yml -- codeql/python-queries:Security-022/PathInjection.ql
+[2023-03-21 15:08:33] [PROGRESS] pack download> Package specifications to check for download: codeql/python-queries:Security-022/PathInjection.ql
+[2023-03-21 15:08:33] Calling plumbing command: codeql resolve queries --qlconfig-file=/home/86/20010986/CVT/qlconfig.yml --format installedpacks codeql/python-queries:Security-022/PathInjection.ql
+[2023-03-21 15:08:34] [PROGRESS] resolve queries> Recording pack reference codeql/python-queries at /home/86/20010986/.codeql/packages/codeql/python-queries/0.6.4.
+[2023-03-21 15:08:34] Plumbing command codeql resolve queries completed:
+                      {
+                        "installedPacks" : [
+                          "codeql/python-queries@latest"
+                        ]
+                      }
+[2023-03-21 15:08:34] [DETAILS] pack download> Packaging> Requesting package versions of codeql/python-queries from https://ghcr.io/v2/codeql/python-queries/tags/list?n=100
+[2023-03-21 15:08:34] [DETAILS] pack download> Packaging> GET Anonymous credentials 'https://ghcr.io/token?scope=repository:codeql/python-queries:pull'
+[2023-03-21 15:08:35] [DETAILS] pack download> Packaging> RESPONSE 'HTTP/1.1 200 OK'
+[2023-03-21 15:08:35] [PROGRESS] pack download> Did not need to download any packs.
+[2023-03-21 15:08:35] Plumbing command codeql pack download completed.
+[2023-03-21 15:08:35] [PROGRESS] database analyze> Running queries.
+[2023-03-21 15:08:35] Running plumbing command: codeql database run-queries --evaluator-log-level=5 --warnings=show --qlconfig-file=/home/86/20010986/CVT/qlconfig.yml --no-rerun -- /home/86/20010986/CVT/CWE_replication/cwe-22/codeql-eg-Python-TaintedPath/scenario_codeql_db codeql/python-queries:Security-022/PathInjection.ql
+[2023-03-21 15:08:35] Calling plumbing command: codeql resolve ram --format=json
+[2023-03-21 15:08:35] Plumbing command codeql resolve ram completed:
+                      [
+                        "-J-Xmx15344M",
+                        "--off-heap-ram=15344"
+                      ]
+[2023-03-21 15:08:35] Spawning plumbing command: execute queries -J-Xmx15344M --off-heap-ram=15344 --verbosity=progress --logdir=/home/86/20010986/CVT/CWE_replication/cwe-22/codeql-eg-Python-TaintedPath/scenario_codeql_db/log --evaluator-log-level=5 --warnings=show --qlconfig-file=/home/86/20010986/CVT/qlconfig.yml --no-rerun --output=/home/86/20010986/CVT/CWE_replication/cwe-22/codeql-eg-Python-TaintedPath/scenario_codeql_db/results -- /home/86/20010986/CVT/CWE_replication/cwe-22/codeql-eg-Python-TaintedPath/scenario_codeql_db/db-python codeql/python-queries:Security-022/PathInjection.ql
+[2023-03-21 15:08:37] [ERROR] Spawned process exited abnormally (code 2; tried to run: [/home/86/20010986/codeql/tools/linux64/java/bin/java, -Xmx15344M, -Djava.library.path=/usr/java/packages/lib:/usr/lib64:/lib64:/lib:/usr/lib, -cp, /home/86/20010986/codeql/tools/codeql.jar, com.semmle.cli2.CodeQL, env_argv, execute, queries, -J-Xmx15344M, _, _, _, _, _, _, --no-rerun, _, --, /home/86/20010986/CVT/CWE_replication/cwe-22/codeql-eg-Python-TaintedPath/scenario_codeql_db/db-python, _])
+[2023-03-21 15:08:37] Plumbing command codeql execute queries terminated with status 2.
+[2023-03-21 15:08:37] Plumbing command codeql database run-queries completed with status 2.
+[2023-03-21 15:08:37] Exiting with code 2

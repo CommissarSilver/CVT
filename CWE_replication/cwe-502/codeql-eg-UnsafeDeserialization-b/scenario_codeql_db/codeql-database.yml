@@ -1,0 +1,9 @@
+---
+sourceLocationPrefix: "/home/86/20010986/CVT/CWE_replication/cwe-502/codeql-eg-UnsafeDeserialization-b"
+baselineLinesOfCode: 1640
+unicodeNewlines: false
+columnKind: "utf32"
+primaryLanguage: "python"
+creationMetadata:
+  cliVersion: "2.12.4"
+  creationTime: "2023-03-21T02:04:53.742944644Z"

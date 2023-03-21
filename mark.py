@@ -12,7 +12,7 @@ import re
 import subprocess
 
 
-def get_mark_setups(src_dir: str) -> [dict[str, str]]:
+def get_mark_setups(src_dir):
     mark_setups = []
 
     for root, dirs, files in os.walk(src_dir):

@@ -1,0 +1,9 @@
+---
+sourceLocationPrefix: "/home/86/20010986/CVT/CWE_replication/cwe-732/codeql-eg-WeakFilePermissions"
+baselineLinesOfCode: 209
+unicodeNewlines: false
+columnKind: "utf32"
+primaryLanguage: "python"
+creationMetadata:
+  cliVersion: "2.12.4"
+  creationTime: "2023-03-21T02:05:55.380094207Z"
