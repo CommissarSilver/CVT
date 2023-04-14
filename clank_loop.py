@@ -29,6 +29,8 @@ def separate_solutions(parent_dir: str, turn_num: int):
         for statement in statements_to_remove:
             # remove the entire line that contains the statement_to_remove
             f = re.sub(f".*{statement}.*", "", f)
+            # remove the lines that start with a #
+            f = re.sub(r"^[#].*$", "", f, flags=re.MULTILINE)
             # separate the solutions if there is a line with '==' or more in it
             f = re.split(f".*===.*", f)
 
@@ -194,6 +196,7 @@ if __name__ == "__main__":
                     + "copilot suggestions are ready"
                     + "\033[0m"
                 )
+            input("Press any key to continue...")
 
             separate_solutions(path, turn_num)
             print(
