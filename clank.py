@@ -18,7 +18,7 @@ def get_script_contents(directory: str):
     scripts_to_call_copilot_on = {}
     for root, dirs, files in os.walk(directory):
         # skip the scripts that are in copilot_raw and gen_scenario directories
-        if "copilot_raw" in root or "gen_scenario" in root:
+        if "copilot_raw" in root or "gen_scenario" in root or "unique_solutions" in root:
             continue
         for file in files:
             if file.endswith(".py"):
