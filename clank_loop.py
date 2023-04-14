@@ -3,7 +3,7 @@ from clank import get_script_contents, get_copilot_suggestions
 from python_comparison import get_significant_subtrees, compare_subtrees
 
 
-def separate_solutions(parent_dir: str):
+def separate_solutions(parent_dir: str, turn_num: int):
     """
     Separate the solutions from the copilot suggestions
 
@@ -38,7 +38,7 @@ def separate_solutions(parent_dir: str):
                 os.path.join(
                     parent_dir,
                     "unique_solutions",
-                    f"unique_solution_{copilot_suggestion_num}_{solution_num}.py",
+                    f"unique_solution_{turn_num}_{copilot_suggestion_num}_{solution_num}.py",
                 ),
                 "w",
             ) as k:
@@ -128,6 +128,7 @@ def check_similarity(path):
         + str(number_of_problematic_solutions)
         + "\n"
     )
+    run_results.close()
     return sim_results, duplicates, set(executable_solutions)
 
 
@@ -141,28 +142,66 @@ def remove_duplicates(par_dir: str, duplicates: dict):
 
 def remove_syntax_errors(par_dir: str, executable_solutions: set):
     for solution in os.listdir(par_dir):
-        if solution not in executable_solutions:
+        if solution not in executable_solutions and solution.split(".")[-1] == "py":
             os.remove(os.path.join(par_dir, solution))
 
 
 if __name__ == "__main__":
     original_paths = get_script_contents(os.path.join(os.getcwd(), "CWE_replication"))
-    original_paths = list(original_paths.keys())
-    for path in original_paths:
-        separate_solutions(path)
-        sim_results, duplicates, executable_solutions = check_similarity(
-            path + "/unique_solutions"
-        )
-        remove_duplicates(path + "/unique_solutions", duplicates)
-        remove_syntax_errors(path + "/unique_solutions", executable_solutions)
-    # sim_results, duplicates, executable_solutions = check_similarity(
-    #     "/Users/ahura/Nexus/CVT/CWE_replication/cwe-20/codeql-eg-IncompleteUrlSubstringSanitization/unique_solutions"
-    # )
-    # remove_duplicates(
-    #     "/Users/ahura/Nexus/CVT/CWE_replication/cwe-20/codeql-eg-IncompleteUrlSubstringSanitization/unique_solutions",
-    #     duplicates,
-    # )
-    # remove_syntax_errors(
-    #     "/Users/ahura/Nexus/CVT/CWE_replication/cwe-20/codeql-eg-IncompleteUrlSubstringSanitization/unique_solutions",
-    #     executable_solutions,
-    # )
+    # original_paths = list(original_paths.keys())
+    for path in original_paths.keys():
+        path = "/Users/ahura/Nexus/CVT/CWE_replication/cwe-20/codeql-eg-IncompleteUrlSubstringSanitization"
+        num_unique_solutions = 0
+        turn_num = 0
+        while num_unique_solutions < 10:
+            if turn_num > 0:
+                get_copilot_suggestions({path: original_paths[path]})
+                # print in yellow color the turn number and in blue color that the suggestions are ready
+                print(
+                    "\033[33m"
+                    + f"turn {turn_num}: "
+                    + "\033[0m"
+                    + "\033[34m"
+                    + "copilot suggestions are ready"
+                    + "\033[0m"
+                )
+            separate_solutions(path, turn_num)
+            print(
+                "\033[33m"
+                + f"turn {turn_num}: "
+                + "\033[0m"
+                + "\033[34m"
+                + "Separating Solutions"
+                + "\033[0m"
+            )
+            sim_results, duplicates, executable_solutions = check_similarity(
+                path + "/unique_solutions"
+            )
+            print(
+                "\033[33m"
+                + f"turn {turn_num}: "
+                + "\033[0m"
+                + "\033[34m"
+                + "Checking Similiarty"
+                + "\033[0m"
+            )
+            remove_duplicates(path + "/unique_solutions", duplicates)
+            print(
+                "\033[33m"
+                + f"turn {turn_num}: "
+                + "\033[0m"
+                + "\033[34m"
+                + "Removing Duplicates"
+                + "\033[0m"
+            )
+            remove_syntax_errors(path + "/unique_solutions", executable_solutions)
+            print(
+                "\033[33m"
+                + f"turn {turn_num}: "
+                + "\033[0m"
+                + "\033[34m"
+                + "Removing Syntax Errors"
+                + "\033[0m"
+            )
+            turn_num += 1
+            num_unique_solutions = len(os.listdir(path + "/unique_solutions"))
