@@ -69,12 +69,14 @@ def check_similarity(path: str):
     for code_path in os.listdir(path):
         with open(path + "/" + code_path, "r") as source:
             t1str = source.read()
-            t1str_mod = re.sub(
-                r"(\"{2,3}[\s\n]*)(?:.*?[\s\n]*)*([\n\s]*\"{2,3})",
-                r"",
-                t1str,
-                flags=re.MULTILINE,
-            )
+            pattern = re.compile(r"\"{3}[\s\S]*?\"{3}[\n\s]*", re.DOTALL)
+            t1str_mod = pattern.sub(r"", t1str)
+            # t1str_mod = re.sub(
+            #     r"(\"{2,3}[\s\n]*)(?:.*?[\s\n]*)*([\n\s]*\"{2,3})",
+            #     r"",
+            #     t1str,
+            #     flags=re.MULTILINE,
+            # )
             try:
                 trees[code_path] = ast.parse(t1str_mod, mode="exec")
             except SyntaxError:
@@ -165,7 +167,9 @@ def remove_duplicates(par_dir: str, duplicates: dict):
                     os.remove(os.path.join(par_dir, target))
 
 
-def remove_syntax_errors(par_dir: str, executable_solutions: set):
+def remove_syntax_errors(
+    par_dir: str,
+):
     """
     Remove solutions that have syntax errors
 
@@ -173,9 +177,26 @@ def remove_syntax_errors(par_dir: str, executable_solutions: set):
         par_dir (str): directory containing the solutions
         executable_solutions (set): actual names of the solutions that have syntax errors
     """
-    for solution in os.listdir(par_dir):
-        if solution not in executable_solutions and solution.split(".")[-1] == "py":
-            os.remove(os.path.join(par_dir, solution))
+    for code_path in os.listdir(par_dir):
+        if code_path.split(".")[-1] == "py":
+            with open(par_dir + "/" + code_path, "r") as source:
+                t1str = source.read()
+                # print(par_dir + "/" + code_path)
+                pattern = re.compile(r"\"{3}.*?\"{3}\n?", re.DOTALL)
+                # t1str_mod = re.sub(
+                #     r"(\"{2,3}[\s\n]*)(?:.*?[\s\n]*)*([\n\s]*\"{2,3})",
+                #     r"",
+                #     t1str,
+                #     flags=re.MULTILINE,
+                # )
+                t1str_mod = pattern.sub("", t1str)
+                # with open(par_dir + "/" + "temp_" + code_path, "w") as f:
+                #     f.write(t1str_mod)
+
+            try:
+                ast.parse(t1str_mod, mode="exec")
+            except SyntaxError:
+                os.remove(os.path.join(par_dir, code_path))
 
 
 if __name__ == "__main__":
@@ -185,12 +206,12 @@ if __name__ == "__main__":
     original_paths = get_script_contents(os.path.join(os.getcwd(), "CWE_replication"))
 
     for path in original_paths.keys():
-        path = "/Users/ahura/Nexus/CVT/CWE_replication/cwe-20/codeql-eg-IncompleteUrlSubstringSanitization"
+        path = "/Users/ahura/Nexus/CVT/CWE_replication/cwe-22/codeql-eg-TarSlip"
         num_unique_solutions = 0
         turn_num = 0
         while num_unique_solutions < 10:
             if turn_num > 0:
-                get_copilot_suggestions({path: original_paths[path]})
+                get_copilot_suggestions({path: original_paths[path]}, wait_time=20)
                 print(
                     "\033[33m"
                     + f"turn {turn_num}: "
@@ -211,6 +232,15 @@ if __name__ == "__main__":
                 + "\033[0m"
             )
 
+            remove_syntax_errors(path + "/unique_solutions")
+            print(
+                "\033[33m"
+                + f"turn {turn_num}: "
+                + "\033[0m"
+                + "\033[34m"
+                + "Removing Syntax Errors"
+                + "\033[0m"
+            )
             sim_results, duplicates, executable_solutions = check_similarity(
                 path + "/unique_solutions"
             )
@@ -230,16 +260,6 @@ if __name__ == "__main__":
                 + "\033[0m"
                 + "\033[34m"
                 + "Removing Duplicates"
-                + "\033[0m"
-            )
-
-            remove_syntax_errors(path + "/unique_solutions", executable_solutions)
-            print(
-                "\033[33m"
-                + f"turn {turn_num}: "
-                + "\033[0m"
-                + "\033[34m"
-                + "Removing Syntax Errors"
                 + "\033[0m"
             )
 
