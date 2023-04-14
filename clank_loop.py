@@ -9,6 +9,7 @@ def separate_solutions(parent_dir: str, turn_num: int):
 
     Args:
         parent_dir (str): parent directory of copilot's solutions
+        turn_num (int): the turn number of the turn we're in to keep track of solutions
     """
     statements_to_remove = ["Synthesizing"]
     statements_to_separate = ["======="]
@@ -46,7 +47,19 @@ def separate_solutions(parent_dir: str, turn_num: int):
                 k.close()
 
 
-def check_similarity(path):
+def check_similarity(path: str):
+    """
+    Check similarity between all the solutions in the path
+
+    Args:
+        path (str): path containing the solutions
+
+    Returns:
+        sim_results: similarity score based on AST similarity between the scripts
+        duplicates: dictionary containing the duplicate solutions and their similarity score
+        executable_solutions: list of executable solutions that do not contain syntax errors
+
+    """
     trees = {}
     for code_path in os.listdir(path):
         with open(path + "/" + code_path, "r") as source:
@@ -133,6 +146,13 @@ def check_similarity(path):
 
 
 def remove_duplicates(par_dir: str, duplicates: dict):
+    """
+    Remove the solutions that are similar to other solutions
+
+    Args:
+        par_dir (str): directory containing the solutions
+        duplicates (dict): actual duplicate solutions' name
+    """
     for source, value in duplicates.items():
         if value["similars"]:
             for target in value["similars"]:
@@ -141,6 +161,13 @@ def remove_duplicates(par_dir: str, duplicates: dict):
 
 
 def remove_syntax_errors(par_dir: str, executable_solutions: set):
+    """
+    Remove solutions that have syntax errors
+
+    Args:
+        par_dir (str): directory containing the solutions
+        executable_solutions (set): actual names of the solutions that have syntax errors
+    """
     for solution in os.listdir(par_dir):
         if solution not in executable_solutions and solution.split(".")[-1] == "py":
             os.remove(os.path.join(par_dir, solution))
@@ -148,7 +175,7 @@ def remove_syntax_errors(par_dir: str, executable_solutions: set):
 
 if __name__ == "__main__":
     original_paths = get_script_contents(os.path.join(os.getcwd(), "CWE_replication"))
-    # original_paths = list(original_paths.keys())
+
     for path in original_paths.keys():
         path = "/Users/ahura/Nexus/CVT/CWE_replication/cwe-20/codeql-eg-IncompleteUrlSubstringSanitization"
         num_unique_solutions = 0
@@ -156,7 +183,6 @@ if __name__ == "__main__":
         while num_unique_solutions < 10:
             if turn_num > 0:
                 get_copilot_suggestions({path: original_paths[path]})
-                # print in yellow color the turn number and in blue color that the suggestions are ready
                 print(
                     "\033[33m"
                     + f"turn {turn_num}: "
@@ -165,6 +191,7 @@ if __name__ == "__main__":
                     + "copilot suggestions are ready"
                     + "\033[0m"
                 )
+
             separate_solutions(path, turn_num)
             print(
                 "\033[33m"
@@ -174,6 +201,7 @@ if __name__ == "__main__":
                 + "Separating Solutions"
                 + "\033[0m"
             )
+
             sim_results, duplicates, executable_solutions = check_similarity(
                 path + "/unique_solutions"
             )
@@ -185,6 +213,7 @@ if __name__ == "__main__":
                 + "Checking Similiarty"
                 + "\033[0m"
             )
+
             remove_duplicates(path + "/unique_solutions", duplicates)
             print(
                 "\033[33m"
@@ -194,6 +223,7 @@ if __name__ == "__main__":
                 + "Removing Duplicates"
                 + "\033[0m"
             )
+
             remove_syntax_errors(path + "/unique_solutions", executable_solutions)
             print(
                 "\033[33m"
@@ -203,5 +233,6 @@ if __name__ == "__main__":
                 + "Removing Syntax Errors"
                 + "\033[0m"
             )
+
             turn_num += 1
             num_unique_solutions = len(os.listdir(path + "/unique_solutions"))
