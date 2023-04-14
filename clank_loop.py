@@ -174,6 +174,9 @@ def remove_syntax_errors(par_dir: str, executable_solutions: set):
 
 
 if __name__ == "__main__":
+    #! REMINDER: This need to be done MANUALLY
+    #! REMINDER: TEMPRATURE NEEDS TO BE CHANGED AND SET MANUALLY AND THEN THIS NEEDS TO BE RE-RUN
+    #! REMINDER: check the solutions for too many synthesize statements. It'll mess everything up
     original_paths = get_script_contents(os.path.join(os.getcwd(), "CWE_replication"))
 
     for path in original_paths.keys():
