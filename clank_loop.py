@@ -37,6 +37,9 @@ def separate_solutions(parent_dir: str, turn_num: int):
         # write the solutions to a file
         for solution_num, solution_text in enumerate(f):
             final_solution = orginal_scenario + solution_text
+            ## if final scolution is exactly the same as the original, skip it. but first we need to remove the unncessary whitespaces
+            if final_solution.replace(" ", "") == orginal_scenario.replace(" ", ""):
+                continue
             with open(
                 os.path.join(
                     parent_dir,
@@ -196,7 +199,7 @@ if __name__ == "__main__":
                     + "copilot suggestions are ready"
                     + "\033[0m"
                 )
-            input("Press any key to continue...")
+            # input("Press any key to continue...")
 
             separate_solutions(path, turn_num)
             print(
