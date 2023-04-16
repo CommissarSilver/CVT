@@ -1,7 +1,7 @@
 import os, time, subprocess, platform, re, ast
 from clank import get_script_contents, get_copilot_suggestions
 from python_comparison import get_significant_subtrees, compare_subtrees
-
+import pycode_similar
 
 def separate_solutions(parent_dir: str, turn_num: int):
     """
