@@ -202,6 +202,8 @@ if __name__ == "__main__":
 
     for path in original_paths.keys():
         num_unique_solutions = len([i for i in os.listdir(path) if i.endswith(".py")])
+        if num_unique_solutions >= 20:
+            continue
         turn_num = 0
 
         while num_unique_solutions < 10:
@@ -226,7 +228,7 @@ if __name__ == "__main__":
             + "\033[0m"
         )
 
-        remove_syntax_errors(path + "/gen_scenario")
+        remove_syntax_errors(path + "/unique_solutions")
         print(
             "\033[33m"
             + f"turn {turn_num}: "
@@ -237,7 +239,7 @@ if __name__ == "__main__":
         )
 
         sim_results, duplicates, executable_solutions, run_results = check_similarity(
-            path + "/gen_scenario"
+            path + "/unique_solutions"
         )
         print(
             "\033[33m"
@@ -248,7 +250,7 @@ if __name__ == "__main__":
             + "\033[0m"
         )
 
-        remove_duplicates(path + "/gen_scenario", duplicates)
+        remove_duplicates(path + "/unique_solutions", duplicates)
         print(
             "\033[33m"
             + f"turn {turn_num}: "
@@ -261,7 +263,7 @@ if __name__ == "__main__":
         all_runs[path] = run_results
 
     final_results = open(
-        os.path.join(os.getcwd(), "CWE_replication", "final_results.csv"),
+        os.path.join(os.getcwd(), "CWE_replication", "loop_final_results.csv"),
         "a+",
     )
     final_results.write(
