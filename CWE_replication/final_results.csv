@@ -1,0 +1,14 @@
+CWE,Total Solutions,Number of Duplicates,Number of Problematic Solutions
+codeql-eg-WeakFilePermissions,21,0,0
+codeql-eg-TarSlip,22,20,0
+codeql-eg-Python-TaintedPath,42,17,0
+codeql-eg-python-CommandInjection,48,14,0
+codeql-eq-ReflectedXss,33,26,0
+codeql-eg-HardcodedCredentials-c,16,9,0
+codeql-eg-HardcodedCredentials-b,29,7,0
+codeql-eg-HardcodedCredentials-a,36,24,0
+codeql-eg-SqlInjection-a,37,6,0
+codeql-eg-IncompleteUrlSubstringSanitization,8,4,0
+codeql-eg-UnsafeDeserialization-c,39,14,0
+codeql-eg-UnsafeDeserialization-b,46,9,0
+codeql-eg-UnsafeDeserialization-a,45,22,0
