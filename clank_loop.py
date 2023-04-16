@@ -198,6 +198,7 @@ if __name__ == "__main__":
     #! REMINDER: check the solutions for too many synthesize statements. It'll mess everything up
     original_paths = get_script_contents(os.path.join(os.getcwd(), "CWE_replication"))
     all_runs = {}
+
     for path in original_paths.keys():
         # path = "/Users/ahura/Nexus/CVT/CWE_replication/cwe-20/codeql-eg-IncompleteUrlSubstringSanitization"
         num_unique_solutions = 0
@@ -257,14 +258,76 @@ if __name__ == "__main__":
             + "Removing Duplicates"
             + "\033[0m"
         )
+        if num_unique_solutions >= 20:
+            continue
+        turn_num = 0
+        if path == "/Users/ahura/Nexus/CVT/CWE_replication/cwe-22/codeql-eg-TarSlip":
+            continue
+        while num_unique_solutions < 10:
+            if turn_num > 0:
+                get_copilot_suggestions({path: original_paths[path]}, wait_time=10)
+                print(
+                    "\033[33m"
+                    + f"turn {turn_num}: "
+                    + "\033[0m"
+                    + "\033[34m"
+                    + "copilot suggestions are ready"
+                    + "\033[0m"
+                )
 
-        turn_num += 1
-        num_unique_solutions = len(os.listdir(path + "/gen_scenario"))
-        all_runs[path] = run_results
+            separate_solutions(path, turn_num)
+            print(
+                "\033[33m"
+                + f"turn {turn_num}: "
+                + "\033[0m"
+                + "\033[34m"
+                + "Separating Solutions"
+                + "\033[0m"
+            )
+
+            remove_syntax_errors(path + "/unique_solutions")
+            print(
+                "\033[33m"
+                + f"turn {turn_num}: "
+                + "\033[0m"
+                + "\033[34m"
+                + "Removing Syntax Errors"
+                + "\033[0m"
+            )
+            sim_results, duplicates, executable_solutions, run_results = check_similarity(
+                path + "/unique_solutions"
+            )
+            print(
+                "\033[33m"
+                + f"turn {turn_num}: "
+                + "\033[0m"
+                + "\033[34m"
+                + "Checking Similiarty"
+                + "\033[0m"
+            )
+
+            remove_duplicates(path + "/unique_solutions", duplicates)
+            print(
+                "\033[33m"
+                + f"turn {turn_num}: "
+                + "\033[0m"
+                + "\033[34m"
+                + "Removing Duplicates"
+                + "\033[0m"
+            )
+
+            turn_num += 1
+            num_unique_solutions = len(os.listdir(path + "/unique_solutions"))
+            all_runs[path] = run_results
+
     final_results = open(
-        os.path.join(os.getcwd(), "CWE_replication", "final_results.csv"), "a+"
+        os.path.join(
+            os.getcwd(), "CWE_replication", "final_results_gen_and_uniq_and_cop.csv"
+        ),
+        "a+",
     )
     final_results.write(
+
         "CWE"
         + ","
         + "Total Solutions"
