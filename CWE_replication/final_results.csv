@@ -1,14 +1,14 @@
-CWE,Total Solutions,Number of Duplicates,Number of Problematic Solutions
-/Users/ahura/Nexus/CVT/CWE_replication/cwe-732/codeql-eg-WeakFilePermissions,21,0,0
-/Users/ahura/Nexus/CVT/CWE_replication/cwe-22/codeql-eg-TarSlip,22,20,0
-/Users/ahura/Nexus/CVT/CWE_replication/cwe-22/codeql-eg-Python-TaintedPath,42,17,0
-/Users/ahura/Nexus/CVT/CWE_replication/cwe-78/codeql-eg-python-CommandInjection,48,14,0
-/Users/ahura/Nexus/CVT/CWE_replication/cwe-79/codeql-eq-ReflectedXss,33,26,0
-/Users/ahura/Nexus/CVT/CWE_replication/cwe-798/codeql-eg-HardcodedCredentials-c,16,9,0
-/Users/ahura/Nexus/CVT/CWE_replication/cwe-798/codeql-eg-HardcodedCredentials-b,29,7,0
-/Users/ahura/Nexus/CVT/CWE_replication/cwe-798/codeql-eg-HardcodedCredentials-a,36,24,0
-/Users/ahura/Nexus/CVT/CWE_replication/cwe-89/codeql-eg-SqlInjection-a,37,6,0
-/Users/ahura/Nexus/CVT/CWE_replication/cwe-20/codeql-eg-IncompleteUrlSubstringSanitization,8,4,0
-/Users/ahura/Nexus/CVT/CWE_replication/cwe-502/codeql-eg-UnsafeDeserialization-c,39,14,0
-/Users/ahura/Nexus/CVT/CWE_replication/cwe-502/codeql-eg-UnsafeDeserialization-b,46,9,0
-/Users/ahura/Nexus/CVT/CWE_replication/cwe-502/codeql-eg-UnsafeDeserialization-a,45,22,0
+CWE,Total Solutions,Number of Duplicates,Number of Problematic Solutions,Manual Prune
+codeql-eg-WeakFilePermissions,21,16,0,Yes
+codeql-eg-TarSlip,22,20,0,Yes
+codeql-eg-Python-TaintedPath,42,23,0,Yes
+codeql-eg-python-CommandInjection,48,26,0,Yes
+codeql-eq-ReflectedXss,33,31,0,Yes
+codeql-eg-HardcodedCredentials-c,16,12,0,Yes
+codeql-eg-HardcodedCredentials-b,29,20,0,Yes
+codeql-eg-HardcodedCredentials-a,36,27,0,Yes
+codeql-eg-SqlInjection-a,37,21,0,Yes
+codeql-eg-IncompleteUrlSubstringSanitization,8,4,0,Yes
+codeql-eg-UnsafeDeserialization-c,39,23,0,Yes
+codeql-eg-UnsafeDeserialization-b,46,24,0,Yes
+codeql-eg-UnsafeDeserialization-a,45,28,0,Yes

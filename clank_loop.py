@@ -1,7 +1,7 @@
 import os, time, subprocess, platform, re, ast
 from clank import get_script_contents, get_copilot_suggestions
 from python_comparison import get_significant_subtrees, compare_subtrees
-
+import pycode_similar
 
 def separate_solutions(parent_dir: str, turn_num: int):
     """
@@ -200,13 +200,63 @@ if __name__ == "__main__":
     all_runs = {}
 
     for path in original_paths.keys():
-        path = "/Users/ahura/Nexus/CVT/CWE_replication/cwe-20/codeql-eg-IncompleteUrlSubstringSanitization"
-        num_unique_solutions = len(
-            [
-                file
-                for file in os.listdir(path + "/unique_solutions")
-                if file.endswith(".py")
-            ]
+        # path = "/Users/ahura/Nexus/CVT/CWE_replication/cwe-20/codeql-eg-IncompleteUrlSubstringSanitization"
+        num_unique_solutions = 0
+        turn_num = 0
+
+        # while num_unique_solutions < 10:
+        # if turn_num > 0:
+
+        #     get_copilot_suggestions({path: original_paths[path]}, wait_time=10)
+        #     print(
+        #         "\033[33m"
+        #         + f"turn {turn_num}: "
+        #         + "\033[0m"
+        #         + "\033[34m"
+        #         + "copilot suggestions are ready"
+        #         + "\033[0m"
+        #     )
+        # input("Press any key to continue...")
+
+        # separate_solutions(path, turn_num)
+        # print(
+        #     "\033[33m"
+        #     + f"turn {turn_num}: "
+        #     + "\033[0m"
+        #     + "\033[34m"
+        #     + "Separating Solutions"
+        #     + "\033[0m"
+        # )
+
+        remove_syntax_errors(path + "/gen_scenario")
+        print(
+            "\033[33m"
+            + f"turn {turn_num}: "
+            + "\033[0m"
+            + "\033[34m"
+            + "Removing Syntax Errors"
+            + "\033[0m"
+        )
+        sim_results, duplicates, executable_solutions, run_results = check_similarity(
+            path + "/gen_scenario"
+        )
+        print(
+            "\033[33m"
+            + f"turn {turn_num}: "
+            + "\033[0m"
+            + "\033[34m"
+            + "Checking Similiarty"
+            + "\033[0m"
+        )
+
+        remove_duplicates(path + "/gen_scenario", duplicates)
+        print(
+            "\033[33m"
+            + f"turn {turn_num}: "
+            + "\033[0m"
+            + "\033[34m"
+            + "Removing Duplicates"
+            + "\033[0m"
         )
         if num_unique_solutions >= 20:
             continue
@@ -277,14 +327,19 @@ if __name__ == "__main__":
         "a+",
     )
     final_results.write(
-        "CWE" + ","
-        "Total Solutions" + ","
-        "Number of Duplicates" + ","
-        "Number of Problematic Solutions" + "\n"
+
+        "CWE"
+        + ","
+        + "Total Solutions"
+        + ","
+        + "Number of Duplicates"
+        + ","
+        + "Number of Problematic Solutions"
+        + "\n"
     )
     for key, value in all_runs.items():
         final_results.write(
-            key
+            key.split("/")[-1]
             + ","
             + value["total_solutions"]
             + ","
