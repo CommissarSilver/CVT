@@ -3,6 +3,7 @@ from clank import get_script_contents, get_copilot_suggestions
 from python_comparison import get_significant_subtrees, compare_subtrees
 import pycode_similar
 
+
 def separate_solutions(parent_dir: str, turn_num: int):
     """
     Separate the solutions from the copilot suggestions
@@ -193,39 +194,34 @@ def remove_syntax_errors(
 
 
 if __name__ == "__main__":
-    #! REMINDER: This need to be done MANUALLY
-    #! REMINDER: TEMPRATURE NEEDS TO BE CHANGED AND SET MANUALLY AND THEN THIS NEEDS TO BE RE-RUN
-    #! REMINDER: check the solutions for too many synthesize statements. It'll mess everything up
     original_paths = get_script_contents(os.path.join(os.getcwd(), "CWE_replication"))
     all_runs = {}
     for path in original_paths.keys():
         # path = "/Users/ahura/Nexus/CVT/CWE_replication/cwe-20/codeql-eg-IncompleteUrlSubstringSanitization"
-        num_unique_solutions = 0
+        num_unique_solutions = len([i for i in os.listdir(path) if i.endswith(".py")])
         turn_num = 0
 
-        # while num_unique_solutions < 10:
-        # if turn_num > 0:
+        while num_unique_solutions < 10:
+            if turn_num > 0:
+                get_copilot_suggestions({path: original_paths[path]}, wait_time=10)
+                print(
+                    "\033[33m"
+                    + f"turn {turn_num}: "
+                    + "\033[0m"
+                    + "\033[34m"
+                    + "copilot suggestions are ready"
+                    + "\033[0m"
+                )
 
-        #     get_copilot_suggestions({path: original_paths[path]}, wait_time=10)
-        #     print(
-        #         "\033[33m"
-        #         + f"turn {turn_num}: "
-        #         + "\033[0m"
-        #         + "\033[34m"
-        #         + "copilot suggestions are ready"
-        #         + "\033[0m"
-        #     )
-        # input("Press any key to continue...")
-
-        # separate_solutions(path, turn_num)
-        # print(
-        #     "\033[33m"
-        #     + f"turn {turn_num}: "
-        #     + "\033[0m"
-        #     + "\033[34m"
-        #     + "Separating Solutions"
-        #     + "\033[0m"
-        # )
+        separate_solutions(path, turn_num)
+        print(
+            "\033[33m"
+            + f"turn {turn_num}: "
+            + "\033[0m"
+            + "\033[34m"
+            + "Separating Solutions"
+            + "\033[0m"
+        )
 
         remove_syntax_errors(path + "/gen_scenario")
         print(
