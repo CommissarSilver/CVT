@@ -200,18 +200,20 @@ if __name__ == "__main__":
     all_runs = {}
 
     for path in original_paths.keys():
-        # path = "/Users/ahura/Nexus/CVT/CWE_replication/cwe-20/codeql-eg-IncompleteUrlSubstringSanitization"
+        path = "/Users/ahura/Nexus/CVT/CWE_replication/cwe-20/codeql-eg-IncompleteUrlSubstringSanitization"
         num_unique_solutions = len(
             [
                 file
-                for file in os.listdir(path + "unique_solutions")
+                for file in os.listdir(path + "/unique_solutions")
                 if file.endswith(".py")
             ]
         )
+        if num_unique_solutions >= 20:
+            continue
         turn_num = 0
         if path == "/Users/ahura/Nexus/CVT/CWE_replication/cwe-22/codeql-eg-TarSlip":
             continue
-        while num_unique_solutions < 20:
+        while num_unique_solutions < 10:
             if turn_num > 0:
                 get_copilot_suggestions({path: original_paths[path]}, wait_time=10)
                 print(
@@ -268,24 +270,27 @@ if __name__ == "__main__":
             num_unique_solutions = len(os.listdir(path + "/unique_solutions"))
             all_runs[path] = run_results
 
-    # final_results = open(
-    #     os.path.join(os.getcwd(), "CWE_replication", "final_results.csv"), "a+"
-    # )
-    # final_results.write(
-    #     "CWE" + ","
-    #     "Total Solutions" + ","
-    #     "Number of Duplicates" + ","
-    #     "Number of Problematic Solutions" + "\n"
-    # )
-    # for key, value in all_runs.items():
-    #     final_results.write(
-    #         key
-    #         + ","
-    #         + value["total_solutions"]
-    #         + ","
-    #         + value["number_of_duplicates"]
-    #         + ","
-    #         + value["number_of_problematic_solutions"]
-    #         + "\n"
-    #     )
-    # final_results.close()
+    final_results = open(
+        os.path.join(
+            os.getcwd(), "CWE_replication", "final_results_gen_and_uniq_and_cop.csv"
+        ),
+        "a+",
+    )
+    final_results.write(
+        "CWE" + ","
+        "Total Solutions" + ","
+        "Number of Duplicates" + ","
+        "Number of Problematic Solutions" + "\n"
+    )
+    for key, value in all_runs.items():
+        final_results.write(
+            key
+            + ","
+            + value["total_solutions"]
+            + ","
+            + value["number_of_duplicates"]
+            + ","
+            + value["number_of_problematic_solutions"]
+            + "\n"
+        )
+    final_results.close()
