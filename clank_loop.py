@@ -65,22 +65,21 @@ def check_similarity(path: str):
         executable_solutions: list of executable solutions that do not contain syntax errors
 
     """
+    number_of_duplicate_solutions = 0
+    number_of_syntax_errors = 0
+    number_of_all_solutions = len(os.listdir(path))
+
     trees = {}
     for code_path in os.listdir(path):
         with open(path + "/" + code_path, "r") as source:
             t1str = source.read()
             pattern = re.compile(r"\"{3}[\s\S]*?\"{3}[\n\s]*", re.DOTALL)
             t1str_mod = pattern.sub(r"", t1str)
-            # t1str_mod = re.sub(
-            #     r"(\"{2,3}[\s\n]*)(?:.*?[\s\n]*)*([\n\s]*\"{2,3})",
-            #     r"",
-            #     t1str,
-            #     flags=re.MULTILINE,
-            # )
             try:
                 trees[code_path] = ast.parse(t1str_mod, mode="exec")
             except SyntaxError:
-                continue
+                os.remove(os.path.join(path, code_path))
+                number_of_syntax_errors += 1
 
     sim_results = {}
     for key, tree in trees.items():
@@ -104,32 +103,30 @@ def check_similarity(path: str):
         for source in sim_results.keys()
     }
 
+    duplicate_keys = set()
     for key, value in sim_results.items():
         source = key.split(",")[0]
         target = key.split(",")[1]
+
         if value > 0.9:
             duplicates[source]["similars"].append(target)
             duplicates[source]["similarity"] = value
+            duplicate_keys.add(tuple(sorted((source, target))))
 
         comp_results.write(source + "," + target + "," + str(value) + "\n")
     comp_results.close()
 
-    total_solutions = len(os.listdir(path)) - 1
+    total_solutions = len([file for file in os.listdir(path) if file.endswith(".py")])
+    duplicates_items = {
+        x for x, y in duplicate_keys for z, y2 in duplicate_keys if x != z and y == y2
+    }
 
-    number_of_duplicates = 0
-    for key, value in duplicates.items():
-        similars_temp = len(value["similars"]) + 1 if value["similars"] else 0
-        number_of_duplicates += similars_temp
-
-    number_of_problematic_solutions = 0
     executable_solutions = []
     for key, value in sim_results.items():
         source = key.split(",")[0]
         target = key.split(",")[1]
         executable_solutions.append(source)
         executable_solutions.append(target)
-
-    number_of_problematic_solutions = total_solutions - len(set(executable_solutions))
 
     run_results = open(path + "/" + "run_results.csv", "a+")
     run_results.write(
@@ -143,12 +140,18 @@ def check_similarity(path: str):
     run_results.write(
         str(total_solutions)
         + ","
-        + str(number_of_duplicates)
+        + str(len(duplicates_items))
         + ","
-        + str(number_of_problematic_solutions)
+        + str(number_of_syntax_errors)
         + "\n"
     )
     run_results.close()
+
+    run_results = {
+        "total_solutions": total_solutions,
+        "number_of_duplicates": len(duplicates_items),
+        "number_of_problematic_solutions": number_of_syntax_errors,
+    }
     return sim_results, duplicates, set(executable_solutions)
 
 
@@ -175,23 +178,13 @@ def remove_syntax_errors(
 
     Args:
         par_dir (str): directory containing the solutions
-        executable_solutions (set): actual names of the solutions that have syntax errors
     """
     for code_path in os.listdir(par_dir):
         if code_path.split(".")[-1] == "py":
             with open(par_dir + "/" + code_path, "r") as source:
                 t1str = source.read()
-                # print(par_dir + "/" + code_path)
                 pattern = re.compile(r"\"{3}.*?\"{3}\n?", re.DOTALL)
-                # t1str_mod = re.sub(
-                #     r"(\"{2,3}[\s\n]*)(?:.*?[\s\n]*)*([\n\s]*\"{2,3})",
-                #     r"",
-                #     t1str,
-                #     flags=re.MULTILINE,
-                # )
                 t1str_mod = pattern.sub("", t1str)
-                # with open(par_dir + "/" + "temp_" + code_path, "w") as f:
-                #     f.write(t1str_mod)
 
             try:
                 ast.parse(t1str_mod, mode="exec")
@@ -206,62 +199,83 @@ if __name__ == "__main__":
     original_paths = get_script_contents(os.path.join(os.getcwd(), "CWE_replication"))
 
     for path in original_paths.keys():
-        path = "/Users/ahura/Nexus/CVT/CWE_replication/cwe-22/codeql-eg-TarSlip"
+        # path = "/Users/ahura/Nexus/CVT/CWE_replication/cwe-20/codeql-eg-IncompleteUrlSubstringSanitization"
         num_unique_solutions = 0
         turn_num = 0
-        while num_unique_solutions < 10:
-            if turn_num > 0:
-                get_copilot_suggestions({path: original_paths[path]}, wait_time=20)
-                print(
-                    "\033[33m"
-                    + f"turn {turn_num}: "
-                    + "\033[0m"
-                    + "\033[34m"
-                    + "copilot suggestions are ready"
-                    + "\033[0m"
-                )
-            # input("Press any key to continue...")
+        all_runs = {}
 
-            separate_solutions(path, turn_num)
-            print(
-                "\033[33m"
-                + f"turn {turn_num}: "
-                + "\033[0m"
-                + "\033[34m"
-                + "Separating Solutions"
-                + "\033[0m"
-            )
+        # while num_unique_solutions < 10:
+        # if turn_num > 0:
 
-            remove_syntax_errors(path + "/unique_solutions")
-            print(
-                "\033[33m"
-                + f"turn {turn_num}: "
-                + "\033[0m"
-                + "\033[34m"
-                + "Removing Syntax Errors"
-                + "\033[0m"
-            )
-            sim_results, duplicates, executable_solutions = check_similarity(
-                path + "/unique_solutions"
-            )
-            print(
-                "\033[33m"
-                + f"turn {turn_num}: "
-                + "\033[0m"
-                + "\033[34m"
-                + "Checking Similiarty"
-                + "\033[0m"
-            )
+        #     get_copilot_suggestions({path: original_paths[path]}, wait_time=10)
+        #     print(
+        #         "\033[33m"
+        #         + f"turn {turn_num}: "
+        #         + "\033[0m"
+        #         + "\033[34m"
+        #         + "copilot suggestions are ready"
+        #         + "\033[0m"
+        #     )
+        # input("Press any key to continue...")
 
-            remove_duplicates(path + "/unique_solutions", duplicates)
-            print(
-                "\033[33m"
-                + f"turn {turn_num}: "
-                + "\033[0m"
-                + "\033[34m"
-                + "Removing Duplicates"
-                + "\033[0m"
-            )
+        # separate_solutions(path, turn_num)
+        # print(
+        #     "\033[33m"
+        #     + f"turn {turn_num}: "
+        #     + "\033[0m"
+        #     + "\033[34m"
+        #     + "Separating Solutions"
+        #     + "\033[0m"
+        # )
 
-            turn_num += 1
-            num_unique_solutions = len(os.listdir(path + "/unique_solutions"))
+        remove_syntax_errors(path + "/gen_scenario")
+        print(
+            "\033[33m"
+            + f"turn {turn_num}: "
+            + "\033[0m"
+            + "\033[34m"
+            + "Removing Syntax Errors"
+            + "\033[0m"
+        )
+        sim_results, duplicates, executable_solutions, run_results = check_similarity(
+            path + "/gen_scenario"
+        )
+        print(
+            "\033[33m"
+            + f"turn {turn_num}: "
+            + "\033[0m"
+            + "\033[34m"
+            + "Checking Similiarty"
+            + "\033[0m"
+        )
+
+        remove_duplicates(path + "/gen_scenario", duplicates)
+        print(
+            "\033[33m"
+            + f"turn {turn_num}: "
+            + "\033[0m"
+            + "\033[34m"
+            + "Removing Duplicates"
+            + "\033[0m"
+        )
+
+        turn_num += 1
+        num_unique_solutions = len(os.listdir(path + "/gen_scenario"))
+        all_runs[path] = run_results
+    final_results = open(
+        os.path.join(os.getcwd(), "CWE_replication", "final_results.csv"), "a+"
+    )
+    final_results.write(
+        "CWE",
+        "Total Solutions",
+        "Number of Duplicates",
+        "Number of Problematic Solutions",
+    )
+    for key, value in all_runs.items():
+        final_results.write(
+            key.split("/")[-1],
+            value["total_solutions"],
+            value["number_of_duplicates"],
+            value["number_of_problematic_solutions"],
+        )
+    final_results.close()

@@ -57,7 +57,7 @@ def get_copilot_suggestions(
                 "copilot_raw",
                 f"suggestions_{str(copilot_call_attempt)}.py",
             )
-
+            time.sleep(10)
             with open(copilot_suggestion_path, "w") as f:
                 f.write(script)
                 f.close()
