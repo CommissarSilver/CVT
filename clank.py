@@ -57,7 +57,9 @@ def get_copilot_suggestions(
                 "copilot_raw",
                 f"suggestions_{str(copilot_call_attempt)}.py",
             )
+
             time.sleep(10)
+
             with open(copilot_suggestion_path, "w") as f:
                 f.write(script)
                 f.close()
@@ -178,6 +180,8 @@ def get_copilot_suggestions(
                 pyautogui.hotkey(
                     "command", "s"
                 ) if platform.system() == "Darwin" else pyautogui.hotkey("ctrl", "s")
+                # wait
+                time.sleep(10)
 
 
 if __name__ == "__main__":
