@@ -209,7 +209,8 @@ if __name__ == "__main__":
             ]
         )
         turn_num = 0
-
+        if path == "/Users/ahura/Nexus/CVT/CWE_replication/cwe-22/codeql-eg-TarSlip":
+            continue
         while num_unique_solutions < 20:
             if turn_num > 0:
                 get_copilot_suggestions({path: original_paths[path]}, wait_time=10)
