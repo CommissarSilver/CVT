@@ -1,9 +1,7 @@
 import pycode_similar
 import os
 
-target_path = (
-    "/Users/ahura/Nexus/CVT/CWE_replication/cwe-79/codeql-eq-ReflectedXss/gen_scenario"
-)
+target_path = "/Users/ahura/Nexus/CVT/CWE_replication/cwe-798/codeql-eg-HardcodedCredentials-a/gen_scenario"
 # get all the python files in the target path
 python_files = [
     os.path.join(target_path, name)
