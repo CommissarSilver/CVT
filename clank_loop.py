@@ -13,7 +13,7 @@ def separate_solutions(parent_dir: str, turn_num: int):
         turn_num (int): the turn number of the turn we're in to keep track of solutions
     """
     statements_to_remove = ["Synthesizing"]
-    statements_to_separate = ["======="]
+
     # get all the files in the copilot_raw directory
     orginal_scenario = open(os.path.join(parent_dir, "scenario.py"), "r").read()
     scripts_dir = [
@@ -23,6 +23,7 @@ def separate_solutions(parent_dir: str, turn_num: int):
     # create a directory to store the unique solutions
     if not os.path.exists(os.path.join(parent_dir, "unique_solutions")):
         os.mkdir(os.path.join(parent_dir, "unique_solutions"))
+
     x = sorted(scripts_dir)
     for copilot_suggestion_num, copilot_suggestion in enumerate(scripts_dir):
         f = open(copilot_suggestion, "r")
@@ -66,9 +67,7 @@ def check_similarity(path: str):
         executable_solutions: list of executable solutions that do not contain syntax errors
 
     """
-    number_of_duplicate_solutions = 0
     number_of_syntax_errors = 0
-    number_of_all_solutions = len(os.listdir(path))
 
     trees = {}
     for code_path in os.listdir(path):
@@ -76,12 +75,14 @@ def check_similarity(path: str):
             t1str = source.read()
             pattern = re.compile(r"\"{3}[\s\S]*?\"{3}[\n\s]*", re.DOTALL)
             t1str_mod = pattern.sub(r"", t1str)
+            # if the AST of a script cannot be parsed, then it has a syntax error and not useful
             try:
                 trees[code_path] = ast.parse(t1str_mod, mode="exec")
             except SyntaxError:
                 os.remove(os.path.join(path, code_path))
                 number_of_syntax_errors += 1
 
+    # The similiarity comparisons only do so much. We need to check the final solutions manually.
     sim_results = {}
     for key, tree in trees.items():
         for second_key, second_tree in trees.items():
@@ -109,7 +110,7 @@ def check_similarity(path: str):
         source = key.split(",")[0]
         target = key.split(",")[1]
 
-        if value > 0.9:
+        if int(value) == 1:
             duplicates[source]["similars"].append(target)
             duplicates[source]["similarity"] = value
             duplicate_keys.add(tuple(sorted((source, target))))
@@ -117,6 +118,7 @@ def check_similarity(path: str):
         comp_results.write(source + "," + target + "," + str(value) + "\n")
     comp_results.close()
 
+    # if a is simliar to b and b and c are similar, then a and c are similar as well. we need to check for this
     total_solutions = len([file for file in os.listdir(path) if file.endswith(".py")])
     duplicates_items = {
         x for x, y in duplicate_keys for z, y2 in duplicate_keys if x != z and y == y2
@@ -194,11 +196,11 @@ def remove_syntax_errors(
 
 
 if __name__ == "__main__":
+    #! REMINDER: SIMILARITY BETWEEN THE SCRIPTS NEEDS TO BE CHECKED MANUALLY AFTER EXECUTION
     original_paths = get_script_contents(os.path.join(os.getcwd(), "CWE_replication"))
     all_runs = {}
 
     for path in original_paths.keys():
-        # path = "/Users/ahura/Nexus/CVT/CWE_replication/cwe-20/codeql-eg-IncompleteUrlSubstringSanitization"
         num_unique_solutions = len([i for i in os.listdir(path) if i.endswith(".py")])
         turn_num = 0
 
@@ -233,6 +235,7 @@ if __name__ == "__main__":
             + "Removing Syntax Errors"
             + "\033[0m"
         )
+
         sim_results, duplicates, executable_solutions, run_results = check_similarity(
             path + "/gen_scenario"
         )
@@ -254,76 +257,14 @@ if __name__ == "__main__":
             + "Removing Duplicates"
             + "\033[0m"
         )
-        if num_unique_solutions >= 20:
-            continue
-        turn_num = 0
-        if path == "/Users/ahura/Nexus/CVT/CWE_replication/cwe-22/codeql-eg-TarSlip":
-            continue
-        while num_unique_solutions < 10:
-            if turn_num > 0:
-                get_copilot_suggestions({path: original_paths[path]}, wait_time=10)
-                print(
-                    "\033[33m"
-                    + f"turn {turn_num}: "
-                    + "\033[0m"
-                    + "\033[34m"
-                    + "copilot suggestions are ready"
-                    + "\033[0m"
-                )
 
-            separate_solutions(path, turn_num)
-            print(
-                "\033[33m"
-                + f"turn {turn_num}: "
-                + "\033[0m"
-                + "\033[34m"
-                + "Separating Solutions"
-                + "\033[0m"
-            )
-
-            remove_syntax_errors(path + "/unique_solutions")
-            print(
-                "\033[33m"
-                + f"turn {turn_num}: "
-                + "\033[0m"
-                + "\033[34m"
-                + "Removing Syntax Errors"
-                + "\033[0m"
-            )
-            sim_results, duplicates, executable_solutions, run_results = check_similarity(
-                path + "/unique_solutions"
-            )
-            print(
-                "\033[33m"
-                + f"turn {turn_num}: "
-                + "\033[0m"
-                + "\033[34m"
-                + "Checking Similiarty"
-                + "\033[0m"
-            )
-
-            remove_duplicates(path + "/unique_solutions", duplicates)
-            print(
-                "\033[33m"
-                + f"turn {turn_num}: "
-                + "\033[0m"
-                + "\033[34m"
-                + "Removing Duplicates"
-                + "\033[0m"
-            )
-
-            turn_num += 1
-            num_unique_solutions = len(os.listdir(path + "/unique_solutions"))
-            all_runs[path] = run_results
+        all_runs[path] = run_results
 
     final_results = open(
-        os.path.join(
-            os.getcwd(), "CWE_replication", "final_results_gen_and_uniq_and_cop.csv"
-        ),
+        os.path.join(os.getcwd(), "CWE_replication", "final_results.csv"),
         "a+",
     )
     final_results.write(
-
         "CWE"
         + ","
         + "Total Solutions"
