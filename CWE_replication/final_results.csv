@@ -1,6 +1,6 @@
-CWE,Total Solutions,Number of Duplicates,Number of Problematic Solutions
-codeql-eg-WeakFilePermissions,21,0,0
-codeql-eg-TarSlip,22,20,0
+CWE,Total Solutions,Number of Duplicates,Number of Problematic Solutions,Manual Prune
+codeql-eg-WeakFilePermissions,21,16,0,Yes
+codeql-eg-TarSlip,22,20,0,Yes
 codeql-eg-Python-TaintedPath,42,17,0
 codeql-eg-python-CommandInjection,48,14,0
 codeql-eq-ReflectedXss,33,26,0
