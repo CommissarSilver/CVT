@@ -148,11 +148,11 @@ def check_similarity(path: str):
     run_results.close()
 
     run_results = {
-        "total_solutions": total_solutions,
-        "number_of_duplicates": len(duplicates_items),
-        "number_of_problematic_solutions": number_of_syntax_errors,
+        "total_solutions": str(total_solutions),
+        "number_of_duplicates": str(len(duplicates_items)),
+        "number_of_problematic_solutions": str(number_of_syntax_errors),
     }
-    return sim_results, duplicates, set(executable_solutions)
+    return sim_results, duplicates, set(executable_solutions), run_results
 
 
 def remove_duplicates(par_dir: str, duplicates: dict):
@@ -197,12 +197,12 @@ if __name__ == "__main__":
     #! REMINDER: TEMPRATURE NEEDS TO BE CHANGED AND SET MANUALLY AND THEN THIS NEEDS TO BE RE-RUN
     #! REMINDER: check the solutions for too many synthesize statements. It'll mess everything up
     original_paths = get_script_contents(os.path.join(os.getcwd(), "CWE_replication"))
-
+    all_runs = {}
+    
     for path in original_paths.keys():
         # path = "/Users/ahura/Nexus/CVT/CWE_replication/cwe-20/codeql-eg-IncompleteUrlSubstringSanitization"
         num_unique_solutions = 0
         turn_num = 0
-        all_runs = {}
 
         # while num_unique_solutions < 10:
         # if turn_num > 0:
@@ -262,20 +262,25 @@ if __name__ == "__main__":
         turn_num += 1
         num_unique_solutions = len(os.listdir(path + "/gen_scenario"))
         all_runs[path] = run_results
+
     final_results = open(
         os.path.join(os.getcwd(), "CWE_replication", "final_results.csv"), "a+"
     )
     final_results.write(
-        "CWE",
-        "Total Solutions",
-        "Number of Duplicates",
-        "Number of Problematic Solutions",
+        "CWE" + ","
+        "Total Solutions" + ","
+        "Number of Duplicates" + ","
+        "Number of Problematic Solutions" + "\n"
     )
     for key, value in all_runs.items():
         final_results.write(
-            key.split("/")[-1],
-            value["total_solutions"],
-            value["number_of_duplicates"],
-            value["number_of_problematic_solutions"],
+            key
+            + ","
+            + value["total_solutions"]
+            + ","
+            + value["number_of_duplicates"]
+            + ","
+            + value["number_of_problematic_solutions"]
+            + "\n"
         )
     final_results.close()
