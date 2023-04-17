@@ -201,12 +201,22 @@ if __name__ == "__main__":
     all_runs = {}
 
     for path in original_paths.keys():
-        num_unique_solutions = len([i for i in os.listdir(path) if i.endswith(".py")])
-        if num_unique_solutions >= 20:
-            continue
+        num_unique_solutions = len(
+            [i for i in os.listdir(path + "/unique_solutions") if i.endswith(".py")]
+        )
+
+        print(
+            "\033[34m"
+            + path
+            + ": "
+            + "\033[0m"
+            + "\033[33m"
+            + str(num_unique_solutions)
+            + "\033[0m"
+        )
         turn_num = 0
 
-        while num_unique_solutions < 10:
+        while num_unique_solutions < 10 and turn_num < 2:
             if turn_num > 0:
                 get_copilot_suggestions({path: original_paths[path]}, wait_time=10)
                 print(
@@ -218,73 +228,79 @@ if __name__ == "__main__":
                     + "\033[0m"
                 )
 
-        separate_solutions(path, turn_num)
-        print(
-            "\033[33m"
-            + f"turn {turn_num}: "
-            + "\033[0m"
-            + "\033[34m"
-            + "Separating Solutions"
-            + "\033[0m"
-        )
+            separate_solutions(path, turn_num)
+            print(
+                "\033[33m"
+                + f"turn {turn_num}: "
+                + "\033[0m"
+                + "\033[34m"
+                + "Separating Solutions"
+                + "\033[0m"
+            )
 
-        remove_syntax_errors(path + "/unique_solutions")
-        print(
-            "\033[33m"
-            + f"turn {turn_num}: "
-            + "\033[0m"
-            + "\033[34m"
-            + "Removing Syntax Errors"
-            + "\033[0m"
-        )
+            remove_syntax_errors(path + "/unique_solutions")
+            print(
+                "\033[33m"
+                + f"turn {turn_num}: "
+                + "\033[0m"
+                + "\033[34m"
+                + "Removing Syntax Errors"
+                + "\033[0m"
+            )
 
-        sim_results, duplicates, executable_solutions, run_results = check_similarity(
-            path + "/unique_solutions"
-        )
-        print(
-            "\033[33m"
-            + f"turn {turn_num}: "
-            + "\033[0m"
-            + "\033[34m"
-            + "Checking Similiarty"
-            + "\033[0m"
-        )
+            sim_results, duplicates, executable_solutions, run_results = check_similarity(
+                path + "/unique_solutions"
+            )
+            print(
+                "\033[33m"
+                + f"turn {turn_num}: "
+                + "\033[0m"
+                + "\033[34m"
+                + "Checking Similiarty"
+                + "\033[0m"
+            )
 
-        remove_duplicates(path + "/unique_solutions", duplicates)
-        print(
-            "\033[33m"
-            + f"turn {turn_num}: "
-            + "\033[0m"
-            + "\033[34m"
-            + "Removing Duplicates"
-            + "\033[0m"
+            remove_duplicates(path + "/unique_solutions", duplicates)
+            print(
+                "\033[33m"
+                + f"turn {turn_num}: "
+                + "\033[0m"
+                + "\033[34m"
+                + "Removing Duplicates"
+                + "\033[0m"
+            )
+
+            all_runs[path] = run_results
+            num_unique_solutions = len(
+                [i for i in os.listdir(path + "/unique_solutions") if i.endswith(".py")]
+            )
+            turn_num += 1
+
+        final_results = open(
+            os.path.join(
+                os.getcwd(), "CWE_replication", f"loop_final_results_{turn_num}.csv"
+            ),
+            "a+",
         )
-
-        all_runs[path] = run_results
-
-    final_results = open(
-        os.path.join(os.getcwd(), "CWE_replication", "loop_final_results.csv"),
-        "a+",
-    )
-    final_results.write(
-        "CWE"
-        + ","
-        + "Total Solutions"
-        + ","
-        + "Number of Duplicates"
-        + ","
-        + "Number of Problematic Solutions"
-        + "\n"
-    )
-    for key, value in all_runs.items():
         final_results.write(
-            key.split("/")[-1]
+            "CWE"
             + ","
-            + value["total_solutions"]
+            + "Total Solutions"
             + ","
-            + value["number_of_duplicates"]
+            + "Number of Duplicates"
             + ","
-            + value["number_of_problematic_solutions"]
+            + "Number of Problematic Solutions"
             + "\n"
         )
-    final_results.close()
+        for key, value in all_runs.items():
+            final_results.write(
+                key.split("/")[-1]
+                + ","
+                + value["total_solutions"]
+                + ","
+                + value["number_of_duplicates"]
+                + ","
+                + value["number_of_problematic_solutions"]
+                + "\n"
+            )
+        final_results.close()
