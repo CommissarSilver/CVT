@@ -4,7 +4,7 @@ from jinja2 import Environment, select_autoescape, FileSystemLoader
 app = Flask(__name__)
 loader = FileSystemLoader( searchpath="templates/" )
 
-#create the jinja2 environment
+"""create the jinja2 environment"""
 # env = 
 #-copilot next line-
 
