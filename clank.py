@@ -49,13 +49,15 @@ def get_copilot_suggestions(
             os.makedirs(os.path.join(script_path, "copilot_raw"))
 
     for script_path, script in scipts.items():
+        script_name = script_path.split("/")[-1]
+        cwe_num = script_name.split("_")[-2]
         for copilot_call_attempt in range(number_of_copilot_calls):
             # create a new file and write the script to it
             copilot_suggestion_path = os.path.join(
                 os.getcwd(),
                 script_path,
                 "copilot_raw",
-                f"suggestions_{str(copilot_call_attempt)}.py",
+                f"{cwe_num}_{script_name}_{str(copilot_call_attempt)}.py",
             )
 
             time.sleep(10)
