@@ -4,7 +4,9 @@ from python_comparison import get_significant_subtrees, compare_subtrees
 import pycode_similar
 
 
-def separate_solutions(parent_dir: str, turn_num: int):
+def separate_solutions(
+    parent_dir: str, turn_num: int, get_solution_confidence: bool = False
+):
     """
     Separate the solutions from the copilot suggestions
 
@@ -12,7 +14,7 @@ def separate_solutions(parent_dir: str, turn_num: int):
         parent_dir (str): parent directory of copilot's solutions
         turn_num (int): the turn number of the turn we're in to keep track of solutions
     """
-    statements_to_remove = ["Synthesizing"]
+    statements_to_remove = ["Synthesizing", "Suggestion"]
 
     # get all the files in the copilot_raw directory
     orginal_scenario = open(os.path.join(parent_dir, "scenario.py"), "r").read()
@@ -26,19 +28,29 @@ def separate_solutions(parent_dir: str, turn_num: int):
 
     x = sorted(scripts_dir)
     for copilot_suggestion_num, copilot_suggestion in enumerate(scripts_dir):
+        cwe_name = copilot_suggestion.split("/")[-4]
+        cwe_scenario = copilot_suggestion.split("/")[-3]
         f = open(copilot_suggestion, "r")
         f = f.read()
         for statement in statements_to_remove:
             # remove the entire line that contains the statement_to_remove
             f = re.sub(f".*{statement}.*", "", f)
             # remove the lines that start with a #
-            f = re.sub(r"^[#].*$", "", f, flags=re.MULTILINE)
-            # separate the solutions if there is a line with '==' or more in it
-            f = re.split(f".*===.*", f)
+        f = re.sub(r"^[#].*$", "", f, flags=re.MULTILINE)
+        # separate the solutions if there is a line with '==' or more in it
+        f = re.split(f".*===.*", f)
 
         # write the solutions to a file
         for solution_num, solution_text in enumerate(f):
             final_solution = orginal_scenario + solution_text
+            # search for the line that says mean_prob: and store it
+            mean_prob = (
+                re.search(r"mean_prob:.*", final_solution)
+                if get_solution_confidence
+                else None
+            )
+            if mean_prob:
+                mean_prob = mean_prob.group(0)
             ## if final scolution is exactly the same as the original, skip it. but first we need to remove the unncessary whitespaces
             if final_solution.replace(" ", "") == orginal_scenario.replace(" ", ""):
                 continue
@@ -46,7 +58,7 @@ def separate_solutions(parent_dir: str, turn_num: int):
                 os.path.join(
                     parent_dir,
                     "unique_solutions",
-                    f"unique_solution_{turn_num}_{copilot_suggestion_num}_{solution_num}.py",
+                    f"{cwe_name}_{cwe_scenario}_unique_solution_{turn_num}_{copilot_suggestion_num}_{solution_num}.py",
                 ),
                 "w",
             ) as k:
@@ -201,8 +213,10 @@ if __name__ == "__main__":
     all_runs = {}
 
     for path in original_paths.keys():
-        num_unique_solutions = len(
-            [i for i in os.listdir(path + "/unique_solutions") if i.endswith(".py")]
+        num_unique_solutions = (
+            len([i for i in os.listdir(path + "/unique_solutions") if i.endswith(".py")])
+            if os.path.exists(os.path.join(path, "unique_solutions"))
+            else 0
         )
 
         print(
