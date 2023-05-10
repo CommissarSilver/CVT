@@ -50,7 +50,7 @@ def get_copilot_suggestions(
 
     for script_path, script in scipts.items():
         script_name = script_path.split("/")[-1]
-        cwe_num = script_path.split("_")[-2]
+        cwe_num = script_path.split("/")[-2]
         for copilot_call_attempt in range(number_of_copilot_calls):
             # create a new file and write the script to it
             copilot_suggestion_path = os.path.join(
