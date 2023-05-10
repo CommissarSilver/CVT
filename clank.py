@@ -86,7 +86,6 @@ def get_copilot_suggestions(
                     raise Exception("No Linux support for now")
 
                 time.sleep(2)
-                # call copilot
 
                 print(
                     "\033[92m"
@@ -102,9 +101,12 @@ def get_copilot_suggestions(
                 pyautogui.hotkey(
                     "command", "f"
                 ) if platform.system() == "Darwin" else pyautogui.hotkey("ctrl", "f")
+                # for some reason, fn key is pressed down, so we need to release it
                 pyautogui.keyUp("fn")
-                pyautogui.write("#-copilot next line-#", interval=0.25)
+                # search for the annotation
+                pyautogui.write("#-copilot next line-#")
                 pyautogui.press("enter")
+                # call copilot
                 pyautogui.click(x=pyautogui.size()[0] - 200, y=pyautogui.size()[1] - 400)
                 pyautogui.hotkey("ctrl", "enter", interval=0.25)
                 # wait for it to load suggestions
