@@ -96,7 +96,7 @@ def get_copilot_suggestions(
                     + "\033[0m"
                 )
 
-                pyautogui.press("pgdn")
+                pyautogui.hotkey("up")
                 # search for the (#copilot-next-line-#) annotation
                 pyautogui.hotkey(
                     "command", "f"
@@ -110,7 +110,7 @@ def get_copilot_suggestions(
                 pyautogui.press("right")
                 pyautogui.press("enter")
                 # call copilot
-                pyautogui.click(x=pyautogui.size()[0] - 200, y=pyautogui.size()[1] - 400)
+                # pyautogui.click(x=pyautogui.size()[0] - 200, y=pyautogui.size()[1] - 400)
                 pyautogui.hotkey("ctrl", "enter", interval=0.25)
                 # wait for it to load suggestions
                 time.sleep(wait_time)

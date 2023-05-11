@@ -213,7 +213,7 @@ if __name__ == "__main__":
     all_runs = {}
 
     for path in original_paths.keys():
-        # path = "/Users/ahura/Nexus/CVT/CWE_replication/cwe-522/my-eg-1-c"
+        path = "/Users/ahura/Nexus/CVT/CWE_replication/cwe-89/my-eg-2"
         num_unique_solutions = (
             len([i for i in os.listdir(path + "/unique_solutions") if i.endswith(".py")])
             if os.path.exists(os.path.join(path, "unique_solutions"))
