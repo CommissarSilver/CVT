@@ -198,11 +198,11 @@ def remove_syntax_errors(
         if code_path.split(".")[-1] == "py":
             with open(par_dir + "/" + code_path, "r") as source:
                 t1str = source.read()
-                pattern = re.compile(r"\"{3}.*?\"{3}\n?", re.DOTALL)
-                t1str_mod = pattern.sub("", t1str)
+                # pattern = re.compile(r"\"{3}.*?\"{3}\n?", re.DOTALL)
+                # t1str_mod = pattern.sub("", t1str)
 
             try:
-                ast.parse(t1str_mod, mode="exec")
+                ast.parse(t1str, mode="exec")
             except SyntaxError:
                 os.remove(os.path.join(par_dir, code_path))
 
@@ -213,6 +213,7 @@ if __name__ == "__main__":
     all_runs = {}
 
     for path in original_paths.keys():
+        # path = "/Users/ahura/Nexus/CVT/CWE_replication/cwe-522/my-eg-1-c"
         num_unique_solutions = (
             len([i for i in os.listdir(path + "/unique_solutions") if i.endswith(".py")])
             if os.path.exists(os.path.join(path, "unique_solutions"))

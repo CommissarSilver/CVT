@@ -104,7 +104,10 @@ def get_copilot_suggestions(
                 # for some reason, fn key is pressed down, so we need to release it
                 pyautogui.keyUp("fn")
                 # search for the annotation
-                pyautogui.write("#-copilot next line-#")
+                pyautogui.write("#-copilot next line-")
+                pyautogui.press("enter")
+                pyautogui.press("esc")
+                pyautogui.press("right")
                 pyautogui.press("enter")
                 # call copilot
                 pyautogui.click(x=pyautogui.size()[0] - 200, y=pyautogui.size()[1] - 400)
