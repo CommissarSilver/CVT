@@ -177,7 +177,7 @@ def get_copilot_suggestions(
                     + "\033[0m"
                 )
 
-                pyautogui.press("pgdn", interval=0.25)
+                # pyautogui.press("pgdn", interval=0.25)
                 pyautogui.hotkey(
                     "command", "v", interval=0.25
                 ) if platform.system() == "Darwin" else pyautogui.hotkey(
