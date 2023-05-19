@@ -1,0 +1,4 @@
+{
+	"cwe": "079",
+	"query": "codeql/python-queries:Security/CWE-079/Jinja2WithoutEscaping.ql"
+}
