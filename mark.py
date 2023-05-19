@@ -21,13 +21,14 @@ def get_mark_setups(src_dir):
                 mark_setup_dict = json.load(open(os.path.join(root, file), "r"))
 
                 for dir_path in dirs:
-                    if "gen" in dir_path:
-                        re_str = "gen_([a-zA-Z0-9_]+)"
-                        mat = re.search(re_str, dir_path)
-                        if mat and mat.group(1) != "scenario":
-                            scenario_name = "scenario_" + mat.group(1)
-                        else:
-                            scenario_name = "scenario"
+                    if "unique_solutions" in dir_path:
+#                       re_str = "gen_([a-zA-Z0-9_]+)"
+#                       mat = re.search(re_str, dir_path)
+#                       if mat and mat.group(1) != "scenario":
+#                           scenario_name = "scenario_" + mat.group(1)
+#                       else:
+#                           scenario_name = "scenario"
+                        scenario_name = "scenario"
 
                         mark_dict = copy.deepcopy(mark_setup_dict)
                         mark_dict["root"] = root
@@ -67,10 +68,10 @@ def main():
         csv_path = os.path.join(root, results_csv_name)
 
         # build codeql command
-        ql_cmd = "codeql database create {db_name} --language=python --overwrite --source-root ./{src_root} && codeql database analyze {db_name} {query_src} --format=csv --output={dest_path} --download"
+        ql_cmd = "codeql database create {db_name} --language=python --overwrite --source-root {src_root} && codeql database analyze {db_name} {query_src} --format=csv --output={dest_path} --download"
 
         ql_cmd = ql_cmd.format(
-            db_name=db_path, src_root=root, query_src=query_src, dest_path=csv_path
+            db_name=db_path, src_root=src_root, query_src=query_src, dest_path=csv_path
         )
 
         print(ql_cmd)
