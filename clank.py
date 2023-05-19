@@ -18,7 +18,7 @@ def get_script_contents(directory: str):
     scripts_to_call_copilot_on = {}
     for root, dirs, files in os.walk(directory):
         # skip the scripts that are in copilot_raw and gen_scenario directories
-        if "copilot_raw" in root or "gen_scenario" in root:
+        if "copilot_raw" in root or "gen_scenario" in root or "unique_solutions" in root:
             continue
         for file in files:
             if file.endswith(".py"):
@@ -49,15 +49,19 @@ def get_copilot_suggestions(
             os.makedirs(os.path.join(script_path, "copilot_raw"))
 
     for script_path, script in scipts.items():
+        script_name = script_path.split("/")[-1]
+        cwe_num = script_path.split("/")[-2]
         for copilot_call_attempt in range(number_of_copilot_calls):
             # create a new file and write the script to it
             copilot_suggestion_path = os.path.join(
                 os.getcwd(),
                 script_path,
                 "copilot_raw",
-                f"suggestions_{str(copilot_call_attempt)}.py",
+                f"{cwe_num}_{script_name}_{str(copilot_call_attempt)}.py",
             )
-            
+
+            time.sleep(10)
+
             with open(copilot_suggestion_path, "w") as f:
                 f.write(script)
                 f.close()
@@ -82,7 +86,6 @@ def get_copilot_suggestions(
                     raise Exception("No Linux support for now")
 
                 time.sleep(2)
-                # call copilot
 
                 print(
                     "\033[92m"
@@ -93,7 +96,21 @@ def get_copilot_suggestions(
                     + "\033[0m"
                 )
 
-                pyautogui.press("pgdn")
+                pyautogui.hotkey("up")
+                # search for the (#copilot-next-line-#) annotation
+                pyautogui.hotkey(
+                    "command", "f"
+                ) if platform.system() == "Darwin" else pyautogui.hotkey("ctrl", "f")
+                # for some reason, fn key is pressed down, so we need to release it
+                pyautogui.keyUp("fn")
+                # search for the annotation
+                pyautogui.write("#-copilot next line-")
+                pyautogui.press("enter")
+                pyautogui.press("esc")
+                pyautogui.press("right")
+                pyautogui.press("enter")
+                # call copilot
+                # pyautogui.click(x=pyautogui.size()[0] - 200, y=pyautogui.size()[1] - 400)
                 pyautogui.hotkey("ctrl", "enter", interval=0.25)
                 # wait for it to load suggestions
                 time.sleep(wait_time)
@@ -160,7 +177,7 @@ def get_copilot_suggestions(
                     + "\033[0m"
                 )
 
-                pyautogui.press("pgdn", interval=0.25)
+                # pyautogui.press("pgdn", interval=0.25)
                 pyautogui.hotkey(
                     "command", "v", interval=0.25
                 ) if platform.system() == "Darwin" else pyautogui.hotkey(
@@ -178,7 +195,10 @@ def get_copilot_suggestions(
                 pyautogui.hotkey(
                     "command", "s"
                 ) if platform.system() == "Darwin" else pyautogui.hotkey("ctrl", "s")
+                # wait
+                time.sleep(10)
 
 
-scripts = get_script_contents(os.path.join(os.getcwd(), "CWE_replication"))
-get_copilot_suggestions(scripts)
+if __name__ == "__main__":
+    scripts = get_script_contents(os.path.join(os.getcwd(), "CWE_replication"))
+    get_copilot_suggestions(scripts)

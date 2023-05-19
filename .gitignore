@@ -2,3 +2,5 @@
 \results
 \scripts
 scenario_codeql_db
+*.pyc
+\.vscode

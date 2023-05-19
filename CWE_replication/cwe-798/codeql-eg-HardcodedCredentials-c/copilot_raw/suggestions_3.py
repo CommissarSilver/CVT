@@ -1,20 +1,57 @@
+from flask import Flask, request, redirect
+import os
+import subprocess
+import sys
+import MySQLdb
+
+app = Flask(__name__)
+
+#def get_db_connection():
+#-copilot next lineSynthesizing 10/10 solutions (Duplicates hidden)
+
+=======
+
+#-copilot next line-
+#    return MySQLdb.connect(host="localhost", user="", passwd="", db="")
+
+@app.route("/hello", methods=["GET", "POST"])
+
+=======
+
+#-copilot next lineSynthesizing 4/10 solutions
+#-copilot next line-
+#    return MySQLdb.connect(host="localhost", user="", passwd="", db="")
+
+@app.route("/hello", methods=["GET", "POST"])
+
 Synthesizing 10/10 solutions (Duplicates hidden)
 
+=====
+
+@app.route('/')
+
+=====
+
+@app.route('/')
+#-copilot next line-
+# dB stuff
+
+=====
+
+@app.route('/')
+#-copilot next line-
+# dB stuff
+
+=====
+
 =======
 
-def get_db_connection():
-    db_host=os.environ["DB_HOST"]
-    db_user=os.environ["DB_USER"]
-    db_password=os.environ["DB_PASSWORD"]
-    db_name=os.environ["DB_NAME"]
-    return MySQLdb.connect(host=db_host, user=db_user, passwd=db_password, db=db_name)
+#-copilot next line-
+#    return MySQLdb.connect(host="localhost", user="", passwd="", db="")
+
+@app.route("/hello", methods=["GET", "POST"])
+@app.route("/")
 
 =======
 
-def get_db_connection():
-    db_host=os.environ["DB_HOST"]
-    db_user=os.environ["DB_USER"]
-    db_password=os.environ["DB_PASSWORD"]
-    db_name=os.environ["DB_NAME"]
-    db = MySQLdb.connect(host=db_host, user=db_user, passwd=db_password, db=db_name)
-    return db
+#-copilot next line-
