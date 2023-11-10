@@ -1,1 +1,3 @@
-pyautogui
+munkres==1.1.4
+pyautogui==0.9.54
+zss==1.2.0
