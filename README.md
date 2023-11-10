@@ -3,6 +3,7 @@ This repository contains the codes and results for replication of the results of
 ## Structure of the repository
 The repository is structured as follows:
 - `CWE_repilcation` contains the reuslts of the CWE replication study.
+- `CodeQL_results` contains the results of CodeQL analysis on files in side `CWE_replication`.
 - The main repository contains the codes for generating the results using Copilot and the codes for comparing the results.
 
 ### CWE-replication Structure tree
