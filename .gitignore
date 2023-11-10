@@ -1,3 +1,6 @@
 .DS_Store
 \results
 \scripts
+scenario_codeql_db
+*.pyc
+\.vscode

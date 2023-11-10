@@ -1,0 +1,4 @@
+{
+	"cwe": "089",
+	"query": "codeql/python-queries:Security/CWE-089/SqlInjection.ql"
+}

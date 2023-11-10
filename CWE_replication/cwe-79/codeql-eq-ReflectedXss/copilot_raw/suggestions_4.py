@@ -1,3 +1,19 @@
+import flask
+from flask import Flask, render_template 
+import requests 
+import sqlite3
+import subprocess
+
+from markupsafe import escape
+
+app = Flask(__name__)
+
+@app.route("/")
+def index():
+    return "<p>Hello, World!</p>"
+
+"""function which says hello to the user"""
+@app.route("hello/<username>") #-copilot next line-
 Synthesizing 9/10 solutions (Duplicates hidden)
 
 =======
@@ -8,14 +24,57 @@ def hello(username):
 =======
 
 def hello_user(username):
-    return "<p>Hello, {}!</p>".format(escape(username))
+    return f"<p>Hello, {escape(username)}!</p>"
 
 =======
 
-def hello(username):
-    return "<p>Hello, %s!</p>" % escape(username)
+Synthesizing 8/10 solutions (Duplicates hidden)
+
+@app.route("hello/<username>") #-copilot next line-
+@app.route("hello/<username>") #-copilot next line-
+@app.route("hello/<username>") #-copilot next line-
+
+@app.route("h
 
 =======
 
-def hello(username):
-    return "<p>Hello, {}!</p>".format(escape(username))
+Synthesizing 9/10 solutions 
+
+"""function which says hello to the user"""
+@app.route("hello/<username>") #-copilot next line-
+"""function which says hello to the user"""
+@app.route("hello/<username>") #-copilot next line-
+"""function which says hello to the user"""
+@app.route("hello/<username>") #-copilot next line-
+"""function which says hello to the user"""
+@app.route("hello/<username>") #-copilot next line-
+"""function which says hello to the user"""
+@app.route("hello/<username>") #-copilot next line-
+"""function which says hello to the user"""
+@app.route("hello/<username>") #-copilot next line-
+"""function which says hello to the user"""
+@app.route("hello/<username>") #-copilot next line-
+"""function which says hello to the user"""
+@app.route("hello/<username>") #-copilot next line-
+"""function which says hello to the user"""
+@app.route("hello/<username>") #-copilot next line-
+"""function which says hello to the user"""
+@app.route("hello/<username>") #-copilot next line-
+"""function which says hello to the user"""
+@app.route("hello/<username>") #-copilot next line-
+"""function which says hello to the user"""
+@app.route("hello/<username>") #-copilot next line-
+
+"""function which says hello to the user"""
+@app.route("hello/<username>") #-copilot next line-
+@app.route("hello/<username>") #-copilot next line-
+@app.route("/hello/<username>")
+
+=======
+
+Synthesizing 9/10 solutions
+
+======
+
+Function to say hello to the user
+@app.route("/hello/<username>")
