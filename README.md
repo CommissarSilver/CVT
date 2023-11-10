@@ -2,8 +2,8 @@ This repository contains the codes and results for replication of the results of
 
 ## Structure of the repository
 The repository is structured as follows:
-- `CWE_repilcation` contains the reuslts of the CWE replication study.
-- `CodeQL_results` contains the results of CodeQL analysis on files in side `CWE_replication`.
+- `CWE_repilcation` contains the results of the CWE replication study.
+- `CodeQL_results` contains the results of CodeQL analysis on files inside `CWE_replication`.
 - The main repository contains the codes for generating the results using Copilot and the codes for comparing the results.
 
 ### CWE-replication Structure tree
@@ -24,5 +24,5 @@ The repository is structured as follows:
 - Install the required libraries using `pip install -r requirements.txt`
 - Run `python clank_loop.py` to generate the results using Copilot. The script will automatically get the results and check similairty between the solutions.
     - IMPORTANT: clank_loop requires you to keep the display on and not interact with the computer while it is running.
-- Run `python mark.py` to generate the neccessary queries for CodeQL.
+- Run `python mark.py` to generate the necessary queries for CodeQL.
 - Run `python collate_results.py` to create all the results from running CodeQL.
