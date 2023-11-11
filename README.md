@@ -1,5 +1,11 @@
 This repository contains the codes and results for replication of the results of our paper "Assessing the Security of GitHub Copilot’s Generated Code - A Targeted Replication Study"
 
+A collaboration between researchers from Polytechnique Montreal (Canada) and Massey University (New Zealand)
+
+Authors: Vahid Majdinasab, Michael Joshua Bishop, Arghavan Moradidakhel, Shawn Rasheed, Amjed Tahir, Foutse Khomh
+
+The study aims to replicate the finding of Pearce et al. (2022) study [Asleep at the keyboard? assessing the security of github copilot’s code contributions"](https://arxiv.org/abs/2108.09293)
+
 ## Structure of the repository
 The repository is structured as follows:
 - `CWE_repilcation` contains the results of the CWE replication study.
